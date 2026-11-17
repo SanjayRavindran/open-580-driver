@@ -1,0 +1,1109 @@
+{
+  "root": "c:\\Users\\Sanjay\\Documents\\AI Projects\\p4\\firmware-blobs\\gp104",
+  "ls_signatures": [
+    {
+      "size": 192,
+      "falcon_id": 2,
+      "falcon_name": "FECS",
+      "footer_xor_words": [
+        "0x00000002",
+        "0x00000000",
+        "0x00000000",
+        "0x00000000"
+      ],
+      "sha256": "bdb7d23cd0d85354377eb65d7343549e83df23c71beb0b0bdcfb77082bfe9a16",
+      "file": "gr/gp104_fecs_ls_sig.bin"
+    },
+    {
+      "size": 192,
+      "falcon_id": 3,
+      "falcon_name": "GPCCS",
+      "footer_xor_words": [
+        "0x00000003",
+        "0x00000000",
+        "0x00000000",
+        "0x00000000"
+      ],
+      "sha256": "452d32671ff1b40e68e1600db23875b11335c55fda7808e4d77f8f70eda5d356",
+      "file": "gr/gp104_gpccs_ls_sig.bin"
+    },
+    {
+      "size": 192,
+      "falcon_id": 3,
+      "falcon_name": "GPCCS",
+      "footer_xor_words": [
+        "0x00000003",
+        "0x00000000",
+        "0x00000000",
+        "0x00000000"
+      ],
+      "sha256": "3255cf10faf7983eda1c7026e621ed3acce0b467c29d513884c20641027a6c6c",
+      "file": "gr/gp104_gpccs_ls_sig_alt.bin"
+    },
+    {
+      "size": 192,
+      "falcon_id": 4,
+      "falcon_name": "NVENC",
+      "footer_xor_words": [
+        "0x00000004",
+        "0x00000000",
+        "0x00000000",
+        "0x00000000"
+      ],
+      "sha256": "2ebe0dfe3cf9ea29b0968ace3e296679fda2ec219f98d8a38b42d34ac7605bcf",
+      "file": "nvenc/gp104_nvenc_ls_sig.bin"
+    },
+    {
+      "size": 192,
+      "falcon_id": 0,
+      "falcon_name": "PMU",
+      "footer_xor_words": [
+        "0x00000000",
+        "0x00000000",
+        "0x00000000",
+        "0x00000000"
+      ],
+      "sha256": "5f61eef8f1749300e248e7d5aa196d7abfc106d38ee00f3a4a924c9cb32211b5",
+      "file": "pmu/gp104_pmu_ls_sig.bin"
+    },
+    {
+      "size": 192,
+      "falcon_id": -1,
+      "falcon_name": "UNKNOWN_OR_UNMASKED",
+      "footer_xor_words": [
+        "0xe931c2b6",
+        "0xd777b203",
+        "0x69a0320e",
+        "0x62804e8f"
+      ],
+      "sha256": "cb0c8a1e03315bf1381a4b858df0eada35867fc9cd4e4ec881b703bd1c9733d2",
+      "file": "sec2/gp104_sec2_hs/id_0x27.bin"
+    },
+    {
+      "size": 192,
+      "falcon_id": 7,
+      "falcon_name": "SEC2",
+      "footer_xor_words": [
+        "0x00000007",
+        "0x00000000",
+        "0x00000000",
+        "0x00000000"
+      ],
+      "sha256": "8403cfdb08fdc589fa671a12483709803a74fac25470decdd9667c42f6de35a8",
+      "file": "sec2/gp104_sec2_rtos/id_0x27.bin"
+    }
+  ],
+  "descriptors": {
+    "acr/gp104_acr_bl/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 1024,
+      "dmem_size": 256,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 768,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_bsi_lock/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 3840,
+      "dmem_size": 1536,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 3584,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_load/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 11008,
+      "dmem_size": 4096,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 10752,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_slot_2a0/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 8704,
+      "dmem_size": 2816,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 8448,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_slot_2a8/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 9728,
+      "dmem_size": 3840,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 9472,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_slot_2b0/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 10496,
+      "dmem_size": 4096,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 10240,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_slot_300/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 2560,
+      "dmem_size": 256,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 2304,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_slot_308/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 2560,
+      "dmem_size": 256,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 2304,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_slot_310/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 4096,
+      "dmem_size": 2048,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 3840,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_slot_320/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 4096,
+      "dmem_size": 2048,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 3840,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_slot_328/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 4096,
+      "dmem_size": 2048,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 3840,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_slot_340/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 2816,
+      "dmem_size": 256,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 2560,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_slot_348/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 2816,
+      "dmem_size": 256,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 2560,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_slot_350/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 2816,
+      "dmem_size": 256,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 2560,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "acr/gp104_acr_unload/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 3072,
+      "dmem_size": 512,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 2816,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "gr/gp104_fecs_bl_desc.bin": {
+      "start_tag": 94,
+      "boot_vec": 24064,
+      "reserved": 0,
+      "dma_idx_or_flags": 0,
+      "code_dma_base_or_size": 256,
+      "data_off": 256,
+      "data_size": 256
+    },
+    "gr/gp104_gpccs_bl_desc.bin": {
+      "start_tag": 52,
+      "boot_vec": 13312,
+      "reserved": 0,
+      "dma_idx_or_flags": 0,
+      "code_dma_base_or_size": 256,
+      "data_off": 256,
+      "data_size": 256
+    },
+    "nvdec/gp104_nvdec_desc.bin": {
+      "os_code_offset": 0,
+      "os_code_size": 1280,
+      "os_data_offset": 109312,
+      "os_data_size": 1024,
+      "num_apps": 13,
+      "entries": [
+        {
+          "offset": 1280,
+          "size": 0
+        },
+        {
+          "offset": 4352,
+          "size": 44032
+        },
+        {
+          "offset": 48384,
+          "size": 0
+        },
+        {
+          "offset": 48384,
+          "size": 41472
+        },
+        {
+          "offset": 89856,
+          "size": 0
+        },
+        {
+          "offset": 89856,
+          "size": 3840
+        },
+        {
+          "offset": 93696,
+          "size": 0
+        },
+        {
+          "offset": 93696,
+          "size": 0
+        },
+        {
+          "offset": 93696,
+          "size": 0
+        },
+        {
+          "offset": 93696,
+          "size": 0
+        },
+        {
+          "offset": 93696,
+          "size": 0
+        },
+        {
+          "offset": 93696,
+          "size": 0
+        },
+        {
+          "offset": 93696,
+          "size": 0
+        },
+        {
+          "offset": 93696,
+          "size": 5632
+        },
+        {
+          "offset": 99328,
+          "size": 0
+        },
+        {
+          "offset": 99328,
+          "size": 5888
+        },
+        {
+          "offset": 105216,
+          "size": 0
+        },
+        {
+          "offset": 105216,
+          "size": 3840
+        },
+        {
+          "offset": 109056,
+          "size": 0
+        },
+        {
+          "offset": 109056,
+          "size": 0
+        },
+        {
+          "offset": 109056,
+          "size": 0
+        },
+        {
+          "offset": 109056,
+          "size": 0
+        },
+        {
+          "offset": 109056,
+          "size": 0
+        },
+        {
+          "offset": 109056,
+          "size": 0
+        },
+        {
+          "offset": 109056,
+          "size": 0
+        },
+        {
+          "offset": 109056,
+          "size": 256
+        }
+      ],
+      "tail_pair": [
+        1280,
+        3072
+      ]
+    },
+    "nvenc/gp104_nvenc0_desc.bin": {
+      "os_code_offset": 0,
+      "os_code_size": 1280,
+      "os_data_offset": 228864,
+      "os_data_size": 1280,
+      "num_apps": 21,
+      "entries": [
+        {
+          "offset": 1280,
+          "size": 38656
+        },
+        {
+          "offset": 43520,
+          "size": 8960
+        },
+        {
+          "offset": 52480,
+          "size": 15104
+        },
+        {
+          "offset": 67584,
+          "size": 24320
+        },
+        {
+          "offset": 91904,
+          "size": 7168
+        },
+        {
+          "offset": 99072,
+          "size": 4608
+        },
+        {
+          "offset": 103680,
+          "size": 256
+        },
+        {
+          "offset": 103936,
+          "size": 8960
+        },
+        {
+          "offset": 112896,
+          "size": 0
+        },
+        {
+          "offset": 112896,
+          "size": 6912
+        },
+        {
+          "offset": 119808,
+          "size": 0
+        },
+        {
+          "offset": 119808,
+          "size": 0
+        },
+        {
+          "offset": 119808,
+          "size": 5120
+        },
+        {
+          "offset": 124928,
+          "size": 0
+        },
+        {
+          "offset": 124928,
+          "size": 6144
+        },
+        {
+          "offset": 131072,
+          "size": 6400
+        },
+        {
+          "offset": 137472,
+          "size": 23552
+        },
+        {
+          "offset": 161024,
+          "size": 10496
+        },
+        {
+          "offset": 171520,
+          "size": 0
+        },
+        {
+          "offset": 171520,
+          "size": 0
+        },
+        {
+          "offset": 171520,
+          "size": 0
+        },
+        {
+          "offset": 171520,
+          "size": 3072
+        },
+        {
+          "offset": 174592,
+          "size": 3840
+        },
+        {
+          "offset": 178432,
+          "size": 7424
+        },
+        {
+          "offset": 185856,
+          "size": 4096
+        },
+        {
+          "offset": 189952,
+          "size": 3584
+        },
+        {
+          "offset": 193536,
+          "size": 0
+        },
+        {
+          "offset": 193536,
+          "size": 3840
+        },
+        {
+          "offset": 197376,
+          "size": 0
+        },
+        {
+          "offset": 197376,
+          "size": 3840
+        },
+        {
+          "offset": 201216,
+          "size": 0
+        },
+        {
+          "offset": 201216,
+          "size": 0
+        },
+        {
+          "offset": 201216,
+          "size": 4352
+        },
+        {
+          "offset": 205568,
+          "size": 0
+        },
+        {
+          "offset": 205568,
+          "size": 2816
+        },
+        {
+          "offset": 208384,
+          "size": 2816
+        },
+        {
+          "offset": 211200,
+          "size": 7168
+        },
+        {
+          "offset": 218368,
+          "size": 4608
+        },
+        {
+          "offset": 222976,
+          "size": 0
+        },
+        {
+          "offset": 222976,
+          "size": 0
+        },
+        {
+          "offset": 222976,
+          "size": 0
+        },
+        {
+          "offset": 222976,
+          "size": 5888
+        }
+      ],
+      "tail_pair": [
+        39936,
+        3584
+      ]
+    },
+    "nvenc/gp104_nvenc1_desc.bin": {
+      "os_code_offset": 0,
+      "os_code_size": 1280,
+      "os_data_offset": 228864,
+      "os_data_size": 1280,
+      "num_apps": 21,
+      "entries": [
+        {
+          "offset": 1280,
+          "size": 38656
+        },
+        {
+          "offset": 43520,
+          "size": 8960
+        },
+        {
+          "offset": 52480,
+          "size": 15104
+        },
+        {
+          "offset": 67584,
+          "size": 24320
+        },
+        {
+          "offset": 91904,
+          "size": 7168
+        },
+        {
+          "offset": 99072,
+          "size": 4608
+        },
+        {
+          "offset": 103680,
+          "size": 256
+        },
+        {
+          "offset": 103936,
+          "size": 8960
+        },
+        {
+          "offset": 112896,
+          "size": 0
+        },
+        {
+          "offset": 112896,
+          "size": 6912
+        },
+        {
+          "offset": 119808,
+          "size": 0
+        },
+        {
+          "offset": 119808,
+          "size": 0
+        },
+        {
+          "offset": 119808,
+          "size": 5120
+        },
+        {
+          "offset": 124928,
+          "size": 0
+        },
+        {
+          "offset": 124928,
+          "size": 6144
+        },
+        {
+          "offset": 131072,
+          "size": 6400
+        },
+        {
+          "offset": 137472,
+          "size": 23552
+        },
+        {
+          "offset": 161024,
+          "size": 10496
+        },
+        {
+          "offset": 171520,
+          "size": 0
+        },
+        {
+          "offset": 171520,
+          "size": 0
+        },
+        {
+          "offset": 171520,
+          "size": 0
+        },
+        {
+          "offset": 171520,
+          "size": 3072
+        },
+        {
+          "offset": 174592,
+          "size": 3840
+        },
+        {
+          "offset": 178432,
+          "size": 7424
+        },
+        {
+          "offset": 185856,
+          "size": 4096
+        },
+        {
+          "offset": 189952,
+          "size": 3584
+        },
+        {
+          "offset": 193536,
+          "size": 0
+        },
+        {
+          "offset": 193536,
+          "size": 3840
+        },
+        {
+          "offset": 197376,
+          "size": 0
+        },
+        {
+          "offset": 197376,
+          "size": 3840
+        },
+        {
+          "offset": 201216,
+          "size": 0
+        },
+        {
+          "offset": 201216,
+          "size": 0
+        },
+        {
+          "offset": 201216,
+          "size": 4352
+        },
+        {
+          "offset": 205568,
+          "size": 0
+        },
+        {
+          "offset": 205568,
+          "size": 2816
+        },
+        {
+          "offset": 208384,
+          "size": 2816
+        },
+        {
+          "offset": 211200,
+          "size": 7168
+        },
+        {
+          "offset": 218368,
+          "size": 4608
+        },
+        {
+          "offset": 222976,
+          "size": 0
+        },
+        {
+          "offset": 222976,
+          "size": 0
+        },
+        {
+          "offset": 222976,
+          "size": 0
+        },
+        {
+          "offset": 222976,
+          "size": 5888
+        }
+      ],
+      "tail_pair": [
+        39936,
+        3584
+      ]
+    },
+    "nvenc/gp104_nvenc_hs_scrub/id_0x18.bin": {
+      "version": 0,
+      "imem_off": 256,
+      "imem_size": 3328,
+      "dmem_size": 256,
+      "num_apps": 1,
+      "app_code_off": 256,
+      "app_code_size": 3072,
+      "app_data_off": 256,
+      "app_data_size": 0
+    },
+    "pmu/gp104_pmu_bl/id_0x12.bin": {
+      "start_tag": 256,
+      "boot_vec": 65536,
+      "reserved": 0,
+      "dma_idx_or_flags": 0,
+      "code_dma_base_or_size": 512,
+      "data_off": 512,
+      "data_size": 256
+    },
+    "pmu/gp104_pmu_rtos/id_0x12.bin": {
+      "desc_size": 656,
+      "stored_size": 297216,
+      "flags": 4,
+      "changelist": 38372406,
+      "build_date": "Tue Jun 23 10:23:1 2026",
+      "app_start_addr": 24064,
+      "app_entry": 24064,
+      "code_offset": 256,
+      "data_offset_span": 300032,
+      "total_expected_image_bytes": 300288,
+      "num_overlays": 99
+    },
+    "sec2/gp104_sec2_bl/id_0x12.bin": {
+      "start_tag": 253,
+      "boot_vec": 64768,
+      "reserved": 0,
+      "dma_idx_or_flags": 0,
+      "code_dma_base_or_size": 512,
+      "data_off": 512,
+      "data_size": 256
+    },
+    "sec2/gp104_sec2_hs/id_0x18.bin": {
+      "os_code_offset": 0,
+      "os_code_size": 768,
+      "os_data_offset": 65024,
+      "os_data_size": 768,
+      "num_apps": 11,
+      "entries": [
+        {
+          "offset": 4096,
+          "size": 28416
+        },
+        {
+          "offset": 32512,
+          "size": 0
+        },
+        {
+          "offset": 32512,
+          "size": 6400
+        },
+        {
+          "offset": 38912,
+          "size": 512
+        },
+        {
+          "offset": 39424,
+          "size": 0
+        },
+        {
+          "offset": 39424,
+          "size": 0
+        },
+        {
+          "offset": 39424,
+          "size": 3072
+        },
+        {
+          "offset": 42496,
+          "size": 512
+        },
+        {
+          "offset": 43008,
+          "size": 512
+        },
+        {
+          "offset": 43520,
+          "size": 256
+        },
+        {
+          "offset": 43776,
+          "size": 1024
+        },
+        {
+          "offset": 44800,
+          "size": 13056
+        },
+        {
+          "offset": 57856,
+          "size": 0
+        },
+        {
+          "offset": 57856,
+          "size": 3584
+        },
+        {
+          "offset": 61440,
+          "size": 1536
+        },
+        {
+          "offset": 62976,
+          "size": 0
+        },
+        {
+          "offset": 62976,
+          "size": 0
+        },
+        {
+          "offset": 62976,
+          "size": 1024
+        },
+        {
+          "offset": 64000,
+          "size": 256
+        },
+        {
+          "offset": 64256,
+          "size": 0
+        },
+        {
+          "offset": 64256,
+          "size": 512
+        },
+        {
+          "offset": 64768,
+          "size": 256
+        }
+      ],
+      "tail_pair": [
+        768,
+        3328
+      ]
+    },
+    "sec2/gp104_sec2_rtos/id_0x12.bin": {
+      "desc_size": 656,
+      "stored_size": 194560,
+      "flags": 2,
+      "changelist": 25052025,
+      "build_date": "Fri Apr 5 1:32:57 2019",
+      "app_start_addr": 64768,
+      "app_entry": 64768,
+      "code_offset": 512,
+      "data_offset_span": 220928,
+      "total_expected_image_bytes": 221440,
+      "num_overlays": 14
+    }
+  },
+  "vbios": {
+    "images": [
+      {
+        "offset": "0x0",
+        "length": 61952,
+        "vendor_id": "0x10de",
+        "device_id": "0x1bb3",
+        "code_type": "0x00",
+        "is_last": false
+      },
+      {
+        "offset": "0xf200",
+        "length": 68096,
+        "vendor_id": "0x10de",
+        "device_id": "0x1bb3",
+        "code_type": "0x03",
+        "is_last": true
+      }
+    ],
+    "efi_gap_bytes": 68096,
+    "bit_offset": "0x1b0",
+    "falcon_table_offset": "0x1fce4",
+    "apps": [
+      {
+        "index": 0,
+        "app_id": 1,
+        "target_id": 1,
+        "rom_offset": 152736,
+        "ucode_size": 0,
+        "desc_version": 17080,
+        "sha256": "37da0eb80dcefb420075b7570691d26caa289502c4841f83d5abc5f1074a748b"
+      },
+      {
+        "index": 3,
+        "app_id": 4,
+        "target_id": 1,
+        "rom_offset": 169864,
+        "ucode_size": 0,
+        "desc_version": 17232,
+        "sha256": "5126343519ca653bdd5eccc4e0a7304802a65e202f3c01add5bb9fa701ba542e"
+      },
+      {
+        "index": 4,
+        "app_id": 5,
+        "target_id": 0,
+        "rom_offset": 201384,
+        "ucode_size": 33624,
+        "desc_version": 513,
+        "sha256": "48f8bee093ea8e66151f5cf3c7e686587a8af2820ff02608a042639e81da3a95"
+      }
+    ]
+  },
+  "prom_inforom": {
+    "jffs_offset": "0x3a600",
+    "version": 2,
+    "fs_size": 32768,
+    "records": [
+      {
+        "name": "ROM",
+        "record_type": 2,
+        "flags_words": [
+          163,
+          0
+        ],
+        "payload_len": 64,
+        "payload_hex_prefix": "524f4d010140000000001106e207494d4740004f424480004f454d0001454343",
+        "ascii_strings": [
+          "ROM",
+          "IMG@",
+          "OBD",
+          "OEM",
+          "ECC",
+          "EEN",
+          "PBL0",
+          "BBX<"
+        ]
+      },
+      {
+        "name": "IMG",
+        "record_type": 2,
+        "flags_words": [
+          113,
+          0
+        ],
+        "payload_len": 64,
+        "payload_hex_prefix": "494d470100400000473431342e303230302e30302e303300b31bde10d811de10",
+        "ascii_strings": [
+          "IMG",
+          "G414.0200.00.03"
+        ]
+      },
+      {
+        "name": "OBD",
+        "record_type": 2,
+        "flags_words": [
+          91,
+          0
+        ],
+        "payload_len": 128,
+        "payload_hex_prefix": "4f42440101800000160618205465736c61205034000000000000000000000000",
+        "ascii_strings": [
+          "OBD",
+          " Tesla P4",
+          "0322418175550",
+          "S161-0172-600",
+          "900-2G414-0000-001",
+          "A01P699-2G414-0200-110"
+        ]
+      },
+      {
+        "name": "OEM",
+        "record_type": 2,
+        "flags_words": [
+          76,
+          0
+        ],
+        "payload_len": 512,
+        "payload_hex_prefix": "4f454d0100000200000000000000000000000000000000000000000000000000",
+        "ascii_strings": [
+          "OEM"
+        ]
+      },
+      {
+        "name": "ECC",
+        "record_type": 6,
+        "flags_words": [
+          96,
+          0
+        ],
+        "payload_len": 4032,
+        "payload_hex_prefix": "4543430401c00f01000000000000000000000000000000000000000000000000",
+        "ascii_strings": [
+          "ECC"
+        ]
+      },
+      {
+        "name": "PBL",
+        "record_type": 6,
+        "flags_words": [
+          64,
+          0
+        ],
+        "payload_len": 1292,
+        "payload_hex_prefix": "50424c03000c0501000000000000000000000000000000000000000000000000",
+        "ascii_strings": [
+          "PBL"
+        ]
+      },
+      {
+        "name": "BBX",
+        "record_type": 6,
+        "flags_words": [
+          237,
+          0
+        ],
+        "payload_len": 4480,
+        "payload_hex_prefix": "4242580100801101246e856a4ec2856a8a2e0000000000000000000000000000",
+        "ascii_strings": [
+          "BBX",
+          "BBX`",
+          "BBX",
+          "BBX",
+          "BBX"
+        ]
+      },
+      {
+        "name": "PPO",
+        "record_type": 6,
+        "flags_words": [
+          58,
+          0
+        ],
+        "payload_len": 112,
+        "payload_hex_prefix": "50504f0100700001000000000000000000000000000000000000000000000000",
+        "ascii_strings": [
+          "PPO"
+        ]
+      },
+      {
+        "name": "OCT",
+        "record_type": 6,
+        "flags_words": [
+          76,
+          0
+        ],
+        "payload_len": 112,
+        "payload_hex_prefix": "4f43540100700001000000000000000000000000000000000000000000000000",
+        "ascii_strings": [
+          "OCT"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+# Proprietary firmware blobs and installer payloads (never commit NVIDIA binaries)
+firmware-blobs/**/*.bin
+firmware-blobs/**/*.rom
+firmware-blobs/**/*.raw
+*.run
+*.o_binary
+
+# Kernel / DKMS / C build outputs
+*.o
+*.ko
+*.ko.*
+*.mod
+*.mod.c
+*.cmd
+*.ver
+*.order
+Module.symvers
+.tmp_versions/
+*.out
+p4_cuda_nvenc_smoke
+p4_nvdec_smoke
+
+# Rust / Python / Dist artifacts
+nova-pascal/target/
+__pycache__/
+*.py[cod]
+dist/
+build/
+docker-data/
+*.tar.gz
+*.mp4
+.cache/
+

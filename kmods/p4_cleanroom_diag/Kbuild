@@ -1,0 +1,3 @@
+obj-m += p4_cleanroom_diag.o
+ccflags-y := -Wall -Wextra -Wno-unused-parameter -Werror
+

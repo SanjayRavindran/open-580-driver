@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: GPL-2.0-only
+[Unit]
+Description=Create NVIDIA GP104 /dev/nvidia* device nodes before Docker GPU workloads
+After=systemd-modules-load.service systemd-udev-settle.service
+Before=docker.service containerd.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/nvidia-modprobe -m -u -c=0
+
+[Install]
+WantedBy=multi-user.target
+

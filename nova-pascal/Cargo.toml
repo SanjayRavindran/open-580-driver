@@ -1,0 +1,10 @@
+[package]
+name = "nova-pascal"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-2.0"
+description = "Clean-room no_std Pascal (GP104) Falcon/ACR bootstrap building blocks aligned with Linux nova-core"
+
+[lib]
+path = "src/lib.rs"
+

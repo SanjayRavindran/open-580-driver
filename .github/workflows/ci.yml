@@ -1,0 +1,88 @@
+name: CI - Build, Test & Package Open R580 Hybrid Driver
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test-and-build:
+    name: Test, Extract & Kbuild Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-gnu
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential dkms kmod libelf-dev \
+            linux-headers-$(uname -r) curl
+
+      - name: Run Python Unit Tests
+        run: |
+          python3 -m unittest discover -s tests -v
+
+      - name: Run Rust nova-pascal Tests
+        run: |
+          cd nova-pascal
+          cargo test --verbose
+
+      - name: Extract & Verify NVIDIA R580 Binaries
+        run: |
+          chmod +x open-r580-driver/*.sh
+          bash open-r580-driver/extract_r580_binaries.sh \
+            --download \
+            --output /tmp/nvidia-580.178.04-extracted
+
+      - name: Kbuild Open R580 Kernel Modules (--dry-run)
+        run: |
+          bash open-r580-driver/open_r580_dkms_builder.sh \
+            --driver-dir /tmp/nvidia-580.178.04-extracted \
+            --dry-run
+
+      - name: Verify IOCTL ABI & Conftest Headers
+        run: |
+          python3 open-r580-driver/verify_ioctl_abi.py \
+            --kernel-dir /tmp/nvidia-580.178.04-extracted/kernel
+
+      - name: Compile Native C Smoke Tests
+        run: |
+          gcc -Wall -Wextra -O2 open-r580-driver/p4_cuda_nvenc_smoke.c -ldl -o /tmp/p4_cuda_nvenc_smoke
+          gcc -Wall -Wextra -O2 open-r580-driver/p4_nvdec_smoke.c -ldl -o /tmp/p4_nvdec_smoke
+          ls -lh /tmp/p4_cuda_nvenc_smoke /tmp/p4_nvdec_smoke
+
+      - name: Package Clean-Room Release Bundle
+        run: |
+          mkdir -p dist
+          tar --exclude='firmware-blobs/**/*.bin' \
+              --exclude='firmware-blobs/**/*.rom' \
+              --exclude='firmware-blobs/**/*.raw' \
+              --exclude='*.pyc' \
+              --exclude='__pycache__' \
+              --exclude='target' \
+              --exclude='.git' \
+              -czf dist/open-p4-driver-v580.178.04-source.tar.gz \
+              LICENSE DISCLAIMER.md README.md docker-compose.yml \
+              docs/ open-r580-driver/ nova-pascal/ kmods/ tools/ tests/ evidence/
+          ls -lh dist/
+
+      - name: Upload Source Release Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-p4-driver-source-bundle
+          path: dist/*.tar.gz
+          retention-days: 14
