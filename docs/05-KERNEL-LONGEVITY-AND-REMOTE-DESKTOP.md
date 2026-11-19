@@ -19,11 +19,15 @@ Direct Kbuild testing of `580.178.04/kernel/` on **`Linux 7.0.0-43-generic`** co
 
 ## 3. Recommended Tesla P4 Architecture for Wayland Desktop, WDDM & Selkies/PixelFlux Containers
 
-1. **Linux Desktop — Pure Wayland (`gnome-shell --no-x11`)**:
+1. **Linux Desktop — Pure Wayland (`gnome-shell --no-x11 --headless`)**:
    - Uses `nvidia-drm modeset=1` paired with `libnvidia-egl-wayland.so.1.1.20`, `libnvidia-egl-wayland2.so.1.0.2` (`09_nvidia_wayland2.json`), and `libnvidia-egl-gbm.so.1.1.3` (`15_nvidia_gbm.json`).
-   - Hardware-accelerated remote desktop via `gnome-remote-desktop` (`RDPGFX_CAPVERSION_107`, CUDA + NVENC H.264 `AVC444`).
+   - Hardware-accelerated remote desktop via `gnome-remote-desktop-headless.service` (`--headless` user daemon on `:3389` with `RDPGFX_CAPVERSION_107`, CUDA + NVENC H.264 `AVC444`), avoiding `--system` Handover Server Redirection NLA MIC (`0x8009030f`) failures on macOS RDP clients.
+   - Global `GSK_RENDERER=ngl` (`/etc/environment`, `/etc/systemd/user.conf.d/gsk-renderer.conf`, `org.gnome.Shell@wayland.service.d/override.conf`) switches GTK4 applications (`ptyxis`, `nautilus`, `gnome-control-center`) from the `vulkan` GDK renderer (`libnvidia-vulkan-producer.so` swapchain segfault in 535) to hardware-accelerated OpenGL 4.6 / EGL on `GRID P4-4Q`.
 2. **Windows 11 24H2 — WDDM `3.1` (`539.72` WHQL)**:
-   - Runs on `GRID P4-4Q` (`4,096 MiB` GDDR5, `SUBSYS_120610DE`) with `Microsoft Basic Display Adapter` disabled so `NVIDIA GRID P4-4Q` is the sole primary GPU for DirectX 11/12 (`FL 12_1`), OpenGL `4.6`, Vulkan `1.3`, OpenCL, DirectCompute, DirectML, CUDA `12.2`, NVENC `12.1`, NVDEC, TechPowerUp GPU-Z, NVIDIA Control Panel (`8.1.969.0`), and Windows RDP hardware `AVC444` (`NVIDIA H.264 Encoder MFT`).
+   - Runs on `GRID P4-4Q` (`4,096 MiB` GDDR5, `SUBSYS_120610DE`) licensed via `fastapi-dls` (`https://192.168.1.24:443`) as `NVIDIA RTX Virtual Workstation — Licensed` (90-day rotating leases) for DirectX 11/12 (`FL 12_1`), OpenGL `4.6`, Vulkan `1.3`, OpenCL, DirectCompute, DirectML, CUDA `12.2`, NVENC `12.1`, NVDEC, TechPowerUp GPU-Z `2.71.0`, and NVIDIA Control Panel (`8.1.969.0`).
+   - Uses `1920 × 1080` (`dynamic resolution:i:0`, `smart sizing:i:1`) with NLA (`UserAuthentication=1`) and without `AVCHardwareEncodePreferred` policy overrides to prevent `RDP_GFX 0x8007007A` (`Error code: 0x200d`) buffer overflows on high-DPI Retina clients (`3600 × 2262`).
 3. **Selkies + LinuxServer.io PixelFlux Container (`10-bit` & `4:4:4` Color Depth)**:
-   - Powered by Docker + NVIDIA Container Toolkit (`nvidia-ctk` CDI v0.7.0) with `SELKIES_ENCODER=h265enc,h264enc`, `SELKIES_VIDEO_FULLCOLOR=true`, and `SELKIES_VIDEO_10BIT=true`.
+   - Powered by Docker + NVIDIA Container Toolkit (`nvidia-ctk` CDI v0.7.0, with `.note.gnu.property` `x86-64-v3` stripped on `el10` for `x86-64-v2` Ivy Bridge Xeon compatibility) with `SELKIES_ENCODER=h265enc,h264enc`, `SELKIES_VIDEO_FULLCOLOR=true`, and `SELKIES_VIDEO_10BIT=true`.
    - Streams zero-copy DMA-BUF (`DRI3` -> `CUDA-array` -> `NVENC`) in **`NVENC H265 4:4:4 10-bit` (`444-10`)** and **`NVENC H264 4:4:4 8-bit` (`444-8`)**.
+4. **Host Delegated License Service (`fastapi-dls`)**:
+   - Deployed on the KVM host at `https://192.168.1.24:443` (`/opt/docker/fastapi-dls/docker-compose.yml`, `collinwebdesigns/fastapi-dls:latest` v2.0.3), serving client configuration tokens at `https://192.168.1.24/-/client-token` and active lease management at `https://192.168.1.24/-/origins?leases=true`.

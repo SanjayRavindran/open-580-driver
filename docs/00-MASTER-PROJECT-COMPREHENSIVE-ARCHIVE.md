@@ -323,18 +323,22 @@ p4/
 │   ├── rea_evidence_summary.json              # REA tool summary, live hardware registers, blob digests
 │   └── hal_matrix_0x1f.txt                    # Raw decompiled HAL initializer mapping for GP104
 │
-└── firmware-blobs/                            # Isolated Proprietary Blobs Folder (Git Ignored)
+├── .agents/skills/                            # Antigravity Agent Skills & Operational Runbooks
+│   ├── tesla-p4-vgpu-host-ops/SKILL.md        # Host .24 Coreboot, 50/50 GRID P4-4Q VMs & FastAPI-DLS
+│   ├── wayland-vgpu-rdp-and-gtk4/SKILL.md     # Pure Wayland --headless RDP & GSK_RENDERER=ngl GTK4 fix
+│   ├── selkies-pixelflux-10bit-444-vgpu/SKILL.md # Docker + NCT CDI + Selkies/PixelFlux 10-bit 4:4:4
+│   ├── windows11-vgpu-wddm-and-rdp/SKILL.md   # Windows 11 WDDM 539.72, GPU-Z, NVCPL & RDP 0x200d fix
+│   └── open-r580-hybrid-dkms/SKILL.md         # Bare-metal R580 hybrid DKMS build & CUDA/NVENC smoke tests
+│
+├── rdp/                                       # Ready-to-Use RDP Connection Profiles (1920x1080)
+│   ├── vm-win11-192.168.1.65.rdp              # Windows 11 24H2 WDDM 3.1 (GRID P4-4Q)
+│   └── vm-alma-192.168.1.68.rdp               # AlmaLinux 10.3 Pure Wayland GNOME 49.5 (GRID P4-4Q)
+│
+└── firmware-blobs/                            # Isolated Proprietary Blobs Metadata (Binaries Git-Ignored)
     ├── README.md                              # Isolation boundary documentation
     └── gp104/
         ├── BLOB_MANIFEST.json                 # Machine-readable SHA-256 digests and blob catalog
-        ├── manifest.json                      # Full extraction manifest
-        ├── acr/                               # 18 ACR bindata archives
-        ├── pmu/                               # PMU RTOS (300,288 B) + desc + LS sig (fid=0)
-        ├── sec2/                              # SEC2 RTOS (221,440 B) + HS (65,792 B) + LS sig (fid=7)
-        ├── nvenc/                             # NVENC0 / NVENC1 ucodes (230,144 B) + LS sig (fid=4)
-        ├── nvdec/                             # NVDEC ucode (110,336 B) + descriptor
-        ├── gr/                                # FECS/GPCCS sigs + netlist (90,552 B) + 32 sections
-        └── vbios/                             # gp104_vbios.rom (239,104 B) + prom_raw.bin (262,144 B)
+        └── manifest.json                      # Full extraction manifest (binaries extracted on-demand)
 ```
 
 ---
