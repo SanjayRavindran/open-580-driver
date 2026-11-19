@@ -247,6 +247,7 @@ install_userspace() {
     "libEGL_nvidia.so.${NVIDIA_VER}:libEGL_nvidia.so.0:"
     "libGLESv2_nvidia.so.${NVIDIA_VER}:libGLESv2_nvidia.so.2:"
     "libGLESv1_CM_nvidia.so.${NVIDIA_VER}:libGLESv1_CM_nvidia.so.1:"
+    "libnvidia-egl-wayland2.so.1.0.2:libnvidia-egl-wayland2.so.1:"
     "libnvidia-egl-wayland.so.1.1.20:libnvidia-egl-wayland.so.1:"
     "libnvidia-egl-gbm.so.1.1.3:libnvidia-egl-gbm.so.1:"
     "libnvidia-egl-xlib.so.1.0.5:libnvidia-egl-xlib.so.1:"
@@ -295,7 +296,7 @@ install_userspace() {
   install_tracked 0644 "${DRIVER_DIR}/nvidia_icd_vksc.json" /usr/share/vulkansc/icd.d/nvidia_icd_vksc.json
   install_tracked 0444 "${DRIVER_DIR}/nvidia.icd" /etc/OpenCL/vendors/nvidia.icd
   local ext_json
-  for ext_json in 10_nvidia_wayland.json 15_nvidia_gbm.json 20_nvidia_xlib.json 20_nvidia_xcb.json; do
+  for ext_json in 09_nvidia_wayland2.json 10_nvidia_wayland.json 15_nvidia_gbm.json 20_nvidia_xlib.json 20_nvidia_xcb.json; do
     install_tracked 0644 "${DRIVER_DIR}/${ext_json}" "/usr/share/egl/egl_external_platform.d/${ext_json}"
   done
   install_tracked 0444 "${DRIVER_DIR}/nvoptix.bin" /usr/share/nvidia/nvoptix.bin
@@ -304,6 +305,13 @@ install_userspace() {
   install_tracked 0644 "${DRIVER_DIR}/sandboxutils-filelist.json" /usr/share/nvidia/sandboxutils-filelist.json
 
   ldconfig
+  if command -v nvidia-ctk >/dev/null 2>&1; then
+    mkdir -p /etc/cdi /var/run/cdi
+    nvidia-ctk runtime configure --runtime=docker >/dev/null 2>&1 || true
+    nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml >/dev/null 2>&1 || true
+    cp -f /etc/cdi/nvidia.yaml /var/run/cdi/nvidia.yaml 2>/dev/null || true
+    echo "Refreshed NVIDIA Container Toolkit CDI spec (/etc/cdi/nvidia.yaml) for Selkies/PixelFlux."
+  fi
   echo "Installed non-clobbering R580 userspace runtime ($(wc -l < "${MANIFEST_FILE}") paths tracked)."
 }
 

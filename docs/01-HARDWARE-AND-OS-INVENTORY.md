@@ -4,11 +4,11 @@
 
 | Property | Observed Value |
 | :--- | :--- |
+| Host IP / Board / Firmware | `192.168.1.24` (`br0`), Gigabyte `H61M-S1 PLUS`, **UEFI Coreboot (`df45ea2c49b4-dirty`)** with Intel VT-d (`DMAR` / `x2apic` / 64-bit Above-4G BARs) |
+| CPU & Memory | Intel Xeon E3-1275 V2 @ 3.50 GHz (4 cores / 8 threads, `x86-64-v2`), 14 GiB DDR3 RAM |
 | Distribution | Ubuntu 26.04.1 LTS (Resolute Raccoon) |
 | Kernel Release | `7.0.0-43-generic` (`x86_64`) |
-| Rust Kernel Support | `CONFIG_RUST=y` (`CONFIG_RUSTC_VERSION=109301`, `rustc 1.93.1` in kernel `.config`; `rustc 1.93.1` + `cargo 1.93.1` verified) |
-| Upstream `nova-core` Config | `# CONFIG_NOVA_CORE is not set` in stock Ubuntu `7.0.0-43-generic` config |
-| Baseline vs. Active Driver | Tested across `no_driver` -> `nouveau 1.4.2` (`card0`/`renderD129`) -> **live R580 `580.178.04`** (`nvidia`, `nvidia-modeset`, `nvidia-uvm`, `nvidia-drm` + `drm_ttm_helper`) |
+| Active Driver Stacks | **`open-r580-driver` (`580.178.04`)** for bare-metal Linux/containers, and **`open-vgpu-tesla-p4` (`535.309.01-vgpu-kvm`)** for 50/50 `GRID P4-4Q` KVM vGPU virtualization |
 | Integrated Display Adapter | `00:02.0` Intel `i915` (`card1`, `renderD128`, connectors `DP-1`, `HDMI-A-1`, `VGA-1`) |
 
 ## 2. NVIDIA Tesla P4 (`GP104GL`) PCI Topology

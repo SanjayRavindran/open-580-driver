@@ -10,6 +10,7 @@ services:
       - "3001:3001"
     devices:
       - /dev/nvidia-modeset:/dev/nvidia-modeset
+      - /dev/dri:/dev/dri
     group_add:
       - "${VIDEO_GID:-44}"
       - "${RENDER_GID:-991}"
@@ -17,10 +18,16 @@ services:
       - PUID=${PUID:-1000}
       - PGID=${PGID:-1000}
       - TZ=${TZ:-UTC}
-      - DRINODE=/dev/dri/renderD129
-      - DRI_NODE=/dev/dri/renderD129
+      - DRINODE=${DRINODE:-/dev/dri/renderD129}
+      - DRI_NODE=${DRI_NODE:-/dev/dri/renderD129}
+      - GBM_BACKENDS_PATH=/usr/lib64/gbm:/usr/lib/x86_64-linux-gnu/gbm
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
+      - SELKIES_ENCODER=${SELKIES_ENCODER:-h265enc,h264enc}
+      - SELKIES_VIDEO_FULLCOLOR=${SELKIES_VIDEO_FULLCOLOR:-true}
+      - SELKIES_VIDEO_10BIT=${SELKIES_VIDEO_10BIT:-true}
+      - SELKIES_VIDEO_STREAMING_MODE=true
+      - SELKIES_FRAMERATE=${SELKIES_FRAMERATE:-60}
     volumes:
       - "${DOCKER_DATA_ROOT:-/home/zero/docker}/webtop/config:/config"
     deploy:
@@ -57,4 +64,3 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu, utility, compute, video]
-

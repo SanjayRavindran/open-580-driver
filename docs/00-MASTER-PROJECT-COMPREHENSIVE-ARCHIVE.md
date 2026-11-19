@@ -148,7 +148,7 @@ The Tesla P4's on-board SPI EEPROM contains a 256 KiB InfoROM formatted with a p
 
 ---
 
-## 5. Architectural Strategy: Track 1 vs. Track 2
+## 5. Architectural Strategy: Open-Shim R580 Hybrid Driver (`open-r580-driver/`)
 
 ```mermaid
 graph TD
@@ -156,13 +156,13 @@ graph TD
         HW["Hardware Execution (Fuses: PrivSec=1, WPR1, FALCON_SCTL=0x7021)"]
     end
 
-    subgraph "Track 1: Open-Shim R580 Hybrid Driver (open-r580-driver/)"
+    subgraph "Open-Shim R580 Hybrid Driver (open-r580-driver/)"
         T1_DKMS["DKMS Layer (open_r580_dkms_builder.sh)"]
         T1_KMOD["Open C Kernel Shims: nvidia-drm (MIT), nvidia-uvm (MIT/GPL)"]
         T1_CORE["Verified Blobs: nv-kernel.o_binary (108 MiB)"]
-        T1_USER["Non-Clobbering Userspace: libcuda, libnvidia-encode, libnvcuvid, Vulkan ICD"]
-        T1_CONT["NVIDIA Container Toolkit 1.20.2 (Docker nvidia runtime)"]
-        T1_APPS["Selkies + PixelFlux 2.2 / Jellyfin 12.4"]
+        T1_USER["Non-Clobbering Userspace: libcuda, libnvidia-encode, libnvcuvid, Wayland EGL/GBM, Vulkan ICD"]
+        T1_CONT["NVIDIA Container Toolkit 1.20.2 (Docker nvidia runtime & CDI v0.7.0)"]
+        T1_APPS["Selkies + PixelFlux 2.2 (10-bit 4:4:4 NVENC) / Jellyfin 12.4"]
         T1_DKMS --> T1_KMOD
         T1_KMOD --> T1_CORE
         T1_CORE --> HW
@@ -170,32 +170,16 @@ graph TD
         T1_CONT --> T1_USER
         T1_APPS --> T1_CONT
     end
-
-    subgraph "Track 2: Clean-Room Rust Driver (nova-pascal/)"
-        T2_RUST["#![no_std] Rust Implementation"]
-        T2_MODS["regs.rs | gpu.rs | fb.rs | vbios.rs | falcon.rs | acr.rs | boot.rs"]
-        T2_BLOBS["Isolated Blobs: PMU, SEC2, NVENC, GR Netlists"]
-        T2_NVK["Open Userspace: Mesa / NVK / VA-API / Wayland (Future)"]
-        T2_RUST --> T2_MODS
-        T2_MODS --> T2_BLOBS
-        T2_BLOBS --> HW
-        T2_NVK --> T2_RUST
-    end
 ```
 
-### 5.1 Track 1: Open-Shim R580 Hybrid Driver
-- **Purpose:** Immediate production reliability, complete CUDA compute support, hardware NVENC encoding, CUVID decoding, and Docker container passthrough.
+### 5.1 Open-Shim R580 Hybrid Driver Architecture
+- **Purpose:** Production reliability, complete CUDA compute support, hardware NVENC encoding, CUVID decoding, Pure Wayland EGL/GBM desktop acceleration, and Docker container passthrough (see companion [`open-vgpu-tesla-p4`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4) for the KVM vGPU stack).
 - **Why NVIDIA `kernel-open/` Does NOT Work on Pascal:**
   NVIDIA's official documentation (`html/kernel_open.html`) explicitly states:
   > *"The open flavor of kernel modules supports Turing and later GPUs. The open kernel modules cannot support GPUs before Turing, because the open kernel modules depend on the GPU System Processor (GSP) first introduced in Turing."*
   `kernel-open/nvidia/nv-kernel.o_binary` is stripped to 17 MiB and completely lacks physical HAL code for pre-Turing architectures.
-- **How Track 1 Solves It:**
-  Track 1 utilizes the open C adaptation layer (`kernel/` inside `580.178.04`, which is licensed under MIT and Dual MIT/GPL) combined with the verified 108 MiB `nv-kernel.o_binary` core. It packages them cleanly into a DKMS module (`nvidia-gp104-r580`), integrates `drm_ttm_helper` soft dependencies for Linux 7.0+, and deploys a non-clobbering userspace runtime that preserves system Mesa/GLVND dispatchers.
-
-### 5.2 Track 2: Clean-Room Rust Driver (`nova-pascal/`)
-- **Purpose:** Upstream Linux kernel longevity aligned with the `nova-core` initiative.
-- **Design:** A pure `#![no_std]` Rust crate providing clean abstractions for MMIO registers, BAR0 access, VBIOS BIT decoding, WPR1 carving, Falcon SRAM uploading, and ACR bootstrap state machines.
-- **Scope Boundary:** Designed for kernel-space bring-up and integration with open Mesa/NVK/VA-API stacks. It does not speak the proprietary RM ioctl interface required by closed-source `libcuda.so.1`.
+- **How `open-r580-driver` Solves It:**
+  `open-r580-driver` utilizes the open C adaptation layer (`kernel/` inside `580.178.04`, licensed under MIT and Dual MIT/GPL) combined with the verified 108 MiB `nv-kernel.o_binary` core. It packages them cleanly into a DKMS module (`nvidia-gp104-r580`), integrates `drm_ttm_helper` soft dependencies for Linux 7.0+, deploys a non-clobbering userspace runtime (including Wayland EGL `1.1.20` / `wayland2 1.0.2` and GBM `1.1.3`), and auto-refreshes the NVIDIA Container Toolkit CDI spec (`/etc/cdi/nvidia.yaml`).
 
 ---
 
@@ -259,24 +243,24 @@ $ docker run --rm --gpus all --runtime nvidia ubuntu:24.04 nvidia-smi
 # Verified: Tesla P4 visible inside unprivileged container, CUDA 13.0 operational.
 ```
 
-#### 2. LinuxServer Selkies + PixelFlux (`selkies-webtop`)
+#### 2. LinuxServer Selkies + PixelFlux (`selkies-webtop` — `10-bit` & `4:4:4` Color Depth)
 - **Image:** `lscr.io/linuxserver/webtop:ubuntu-xfce`
 - **Ports:** `3000` (HTTP), `3001` (HTTPS)
-- **GPU Device:** `/dev/dri/renderD129` (Tesla P4), leaving `/dev/dri/renderD128` (Intel i915) untouched.
-- **Live Startup Logs:**
+- **Environment:** `SELKIES_ENCODER=h265enc,h264enc`, `SELKIES_VIDEO_FULLCOLOR=true`, `SELKIES_VIDEO_10BIT=true`, `GBM_BACKENDS_PATH=/usr/lib64/gbm:/usr/lib/x86_64-linux-gnu/gbm`
+- **Hardware Capabilities (`pixelflux.hardware_formats`):** `{'h264': ['420-8', '444-8'], 'h265': ['420-8', '420-10', '444-8', '444-10']}`
+- **Live Startup & Stream Logs:**
   ```
   **** NVIDIA GPU detected ****
-  **** Xvfb using DRI3 on /dev/dri/renderD129 (nvidia) ****
-  [pixelflux] Render node 1 encodes H264, H265 on nvenc.
-  INFO:main:Selkies 2.2.1 starting: websockets transport, X11 (:1) capture, encoder h264enc at 8-240 fps
-  [X11] Encoder: NVENC H264 4:2:0 8-bit on Tesla P4 (render node 1, nvidia driver), 2 engines.
-  [X11] Zero-copy capture (DRI3): 1024x768 blitted by the X server into 3 GPU buffers on /dev/dri/renderD129, encoded in place on NVENC.
+  [pixelflux] Render node 0 encodes H264, H265 on nvenc.
+  [NVENC] H265 initialized (4:4:4 mode: true, chroma convert: kernel).
+  [X11] Encoder: NVENC H265 4:4:4 10-bit on GRID P4-4Q (render node 0, nvidia driver), split as the driver picks, 2 engines.
+  [X11] Zero-copy capture (DRI3): 1024x768 blitted by the X server into 3 GPU buffers, encoded in place on NVENC.
+  [NVENC] dmabuf imported as a CUDA-array frame (1 planes, 1024x768, pitch 0, 4 channels of element format 1): encoding in place.
   ```
 - **Diagnostics Inside Container:**
-  - `selkies.gpu_probe`: `SELKIES_GPU_DRIVER=nvidia`, `SELKIES_GPU_ACCELERATED=true`, `SELKIES_GPU_MESA_DRIVER=zink`, `GL_RENDERER: zink Vulkan 1.4(Tesla P4 (NVIDIA_PROPRIETARY))`.
-  - HTTP/HTTPS Health: `/api/health` returns `OK (HTTP 200)`.
-  - Screenshot Engine: `/api/screenshot` serves a `1024x768` PNG (`458,296` bytes).
-  - WebSocket Video Stream: Verified via `wss://127.0.0.1:3001/api/websockets` with `START_VIDEO`, streaming binary H.264 packets directly from NVENC.
+  - `selkies.gpu_probe`: `SELKIES_GPU_DRIVER=nvidia`, `SELKIES_GPU_PRESENT=true`, `SELKIES_GPU_ACCELERATED=true`.
+  - HTTP/HTTPS Health: `/` and `/api/screenshot` return `HTTP 200` (`1024x768` PNG).
+  - Hardware 10-bit 4:4:4 & 8-bit 4:4:4 Encode: Verified live on both NVENC H.265 (`444-10`) and NVENC H.264 (`444-8`).
 
 #### 3. Jellyfin Media Server (`jellyfin`)
 - **Image:** `lscr.io/linuxserver/jellyfin:latest` (Jellyfin 12.4.0)
@@ -300,39 +284,25 @@ p4/
 │
 ├── docs/                                      # Complete Technical Documentation Suite
 │   ├── 00-MASTER-PROJECT-COMPREHENSIVE-ARCHIVE.md  # THIS FILE: Definitive reference & knowledge base
-│   ├── 01-HARDWARE-AND-OS-INVENTORY.md        # Silicon identity, PCI buses, memory, Linux 7.0 env
+│   ├── 01-HARDWARE-AND-OS-INVENTORY.md        # Silicon identity, UEFI Coreboot, PCI buses, Linux 7.0 env
 │   ├── 02-BINARY-AND-FIRMWARE-ANALYSIS.md     # ELF64 BindataStorage, decompressors, R580 offsets
 │   ├── 03-SILICON-BOUNDARY-AND-CLEANROOM-SPLIT.md # MMIO proofs, WPR1, fuses, Falcon bypass disproof
-│   ├── 04-NOVA-CORE-FEASIBILITY-AND-ARCHITECTURE.md# GSP vs. pre-GSP, nova-core integration plan
-│   ├── 05-KERNEL-LONGEVITY-AND-REMOTE-DESKTOP.md   # Linux 7.x/8.x roadmap, objtool, Wayland/Zink
+│   ├── 05-KERNEL-LONGEVITY-AND-REMOTE-DESKTOP.md   # Linux 7.x roadmap, Wayland, WDDM & Selkies/PixelFlux
 │   ├── 06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md # ACR, PMU, SEC2, NVENC, GR netlists, VBIOS BIT, InfoROM
-│   └── 07-OPEN-R580-HYBRID-AND-CUDA-NVENC.md  # DKMS architecture, userspace install, container benchmarks
+│   └── 07-OPEN-R580-HYBRID-AND-CUDA-NVENC.md  # DKMS architecture, userspace install, 10-bit 4:4:4 containers
 │
-├── open-r580-driver/                          # Track 1: Open-Shim R580 Hybrid Driver Toolkit
-│   ├── README.md                              # Track 1 guide, DKMS usage, userspace details
+├── open-r580-driver/                          # Open-Shim R580 Hybrid Driver Toolkit
+│   ├── README.md                              # DKMS usage, userspace & container details
 │   ├── extract_r580_binaries.sh               # Automated downloader & SHA-256 validator for R580
 │   ├── open_r580_dkms_builder.sh              # Stager, Kbuilder (--dry-run), installer (--install), uninstaller
 │   ├── dkms.conf.template                     # Dynamic DKMS build specification for Linux 7.0+
 │   ├── modprobe-blacklist-nouveau.conf        # Blacklists nouveau, sets modeset=1, adds drm_ttm_helper softdep
 │   ├── 70-nvidia-p4.rules                     # Udev rule setting 0666 permissions on /dev/nvidia*
 │   ├── nvidia-gp104-devnodes.service          # Systemd oneshot device node service for container runtimes
-│   ├── docker-compose.yml                     # Production Docker Compose for Selkies & Jellyfin
+│   ├── docker-compose.yml                     # Production Docker Compose for Selkies (10-bit 4:4:4) & Jellyfin
 │   ├── verify_ioctl_abi.py                    # Ioctl 'F' magic verifier, conftest parser, live sysfs inspector
 │   ├── p4_cuda_nvenc_smoke.c                  # Native C CUDA 13.0 DMA & NVENC session verifier
 │   └── p4_nvdec_smoke.c                       # Native C CUVID NVDEC hardware decode capability verifier
-│
-├── nova-pascal/                               # Track 2: Clean-Room no_std Rust Driver
-│   ├── Cargo.toml                             # Package manifest (GPL-2.0, edition 2021)
-│   └── src/
-│       ├── lib.rs                             # Crate root, error definitions, trait exports
-│       ├── regs.rs                            # BAR0 MMIO abstractions and GP104 register constants
-│       ├── gpu.rs                             # Silicon specification and chipset identification
-│       ├── fb.rs                              # Framebuffer geometry and WPR1 allocation planner
-│       ├── vbios.rs                           # PCIR walker, EFI GOP gap offset handler, BIT token parser
-│       ├── falcon.rs                          # Falcon engine controller (PMU, SEC2, NVENC0 0x1c8000)
-│       ├── acr.rs                             # Production fuse detector, ACR HS/LS header builder
-│       ├── firmware.rs                        # FlcnBlDesc and application binary descriptor decoders
-│       └── boot.rs                            # Clean-room bootstrap state machine
 │
 ├── kmods/                                     # Linux Kernel Diagnostic Drivers
 │   └── p4_cleanroom_diag/
@@ -407,9 +377,6 @@ gcc -O2 open-r580-driver/p4_cuda_nvenc_smoke.c -ldl -o /tmp/p4_cuda_nvenc_smoke
 gcc -O2 open-r580-driver/p4_nvdec_smoke.c -ldl -o /tmp/p4_nvdec_smoke
 /tmp/p4_cuda_nvenc_smoke
 /tmp/p4_nvdec_smoke
-
-# Run offline Rust tests
-cd nova-pascal && cargo test --offline
 ```
 
 ### Phase 5: Docker & Container Deployment
