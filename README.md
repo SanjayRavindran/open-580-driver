@@ -27,6 +27,8 @@ This repository contains the **Open-Shim R580 (`580.178.04`) DKMS / CUDA / NVENC
 | Deliverable | Purpose |
 | :--- | :--- |
 | [`docs/00-MASTER-PROJECT-COMPREHENSIVE-ARCHIVE.md`](./docs/00-MASTER-PROJECT-COMPREHENSIVE-ARCHIVE.md) | **Master Knowledge Base**: hardware proofs, Falcon security internals, DKMS hybrid driver packaging, and container benchmarks |
+| [`docs/10-INSTALLATION-GUIDE-HOST-AND-GUEST.md`](./docs/10-INSTALLATION-GUIDE-HOST-AND-GUEST.md) | **Unified Host & Guest Installation Guide**: step-by-step installation for both `open-580-driver` (`scripts/install_open_580.sh`) and `open-vgpu-tesla-p4` (`scripts/install_open_vgpu.sh`) across Host, Linux Guest, and Windows 11 Guest |
+| [`scripts/`](./scripts/install_open_580.sh) | Unified host & guest installers [`install_open_580.sh`](./scripts/install_open_580.sh) (`--role host\|guest-linux`) and [`install_open_vgpu.sh`](./scripts/install_open_vgpu.sh) (`--role host\|guest-linux\|guest-windows`) |
 | [`open-r580-driver/`](./open-r580-driver/README.md) | DKMS builder (`--dry-run` / `--install --with-userspace`), `nouveau` blacklist + `drm_ttm_helper` `softdep`, udev rule, `verify_ioctl_abi.py`, `p4_cuda_nvenc_smoke.c`, `p4_nvdec_smoke.c`, & `docker-compose.yml` |
 | [`firmware-blobs/`](./firmware-blobs/README.md) | Isolated GP104 Falcon binaries (`acr/`, `pmu/`, `sec2/`, `nvenc/`, `nvdec/`, `gr/`), `gp104_vbios.rom`, `prom_raw.bin`, & [`BLOB_MANIFEST.json`](./firmware-blobs/gp104/BLOB_MANIFEST.json) |
 | [`tools/`](./tools/nv_bindata_analyzer.py) | Clean-room ELF64 `.rodata` bindata extractor (`nv_bindata_analyzer.py`) + Falcon/VBIOS/PROM descriptor decoder (`nv_fw_descriptor_parser.py`) |

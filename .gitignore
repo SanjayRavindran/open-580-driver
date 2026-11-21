@@ -4,6 +4,7 @@ firmware-blobs/**/*.rom
 firmware-blobs/**/*.raw
 *.run
 *.o_binary
+nvidia-gridd
 
 # Kernel / DKMS / C build outputs
 *.o
