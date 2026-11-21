@@ -31,3 +31,12 @@ Direct Kbuild testing of `580.178.04/kernel/` on **`Linux 7.0.0-43-generic`** co
    - Streams zero-copy DMA-BUF (`DRI3` -> `CUDA-array` -> `NVENC`) in **`NVENC H265 4:4:4 10-bit` (`444-10`)** and **`NVENC H264 4:4:4 8-bit` (`444-8`)**.
 4. **Host Delegated License Service (`fastapi-dls`)**:
    - Deployed on the KVM host at `https://192.168.1.24:443` (`/opt/docker/fastapi-dls/docker-compose.yml`, `collinwebdesigns/fastapi-dls:latest` v2.0.3), serving client configuration tokens at `https://192.168.1.24/-/client-token` and active lease management at `https://192.168.1.24/-/origins?leases=true`.
+
+
+---
+
+## Companion vGPU Stack Update (`open-vgpu-tesla-p4`, 2026-11-21)
+
+For the 50/50 Tesla P4 `GRID P4-4Q` dual-VM stack (`vm-alma` + `vm-win11` on `192.168.1.24`), see [`SanjayRavindran/open-vgpu-tesla-p4`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4):
+- Clean DKMS `nvidia-vgpu-kvm/535.309.01` packaging + open-source `open-nvidia-vgpud`, `libopen-vgxcfg.so`, and `open-nvidia-xid-logd` (`rea@6.10.1` verified).
+- Full **Ubuntu KVM** and **Proxmox VE 8/9** hypervisor & guest automation scripts (`install_vgpu_host_dkms.sh`, `install_fastapi_dls.sh`, `setup_proxmox_vgpu_vms.sh`, `provision_alma_guest.sh`, `provision_win11_guest.ps1`).

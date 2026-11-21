@@ -409,6 +409,19 @@ sudo bash open-r580-driver/open_r580_dkms_builder.sh --uninstall
 ## 9. Legal, Copyright & Attribution Notice
 
 - **Original Open-Source Software:** All scripts, Rust code, C smoke tests, diagnostic kernel modules, and markdown documentation authored in this repository are licensed under the **GNU General Public License v2.0** ([`LICENSE`](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/LICENSE)).
+
+---
+
+## Companion vGPU Repository (`open-vgpu-tesla-p4`) — Reproducible DKMS & REA 6.10.1 Open Host Daemons (2026-11-21)
+
+The active virtualization work on `192.168.1.24` (`vm-alma` + `vm-win11` 50/50 `GRID P4-4Q` split) lives in the companion repository ([`SanjayRavindran/open-vgpu-tesla-p4`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4)):
+- **Host Cleanup (`48 GiB` Reclaimed)**: Retired KVM VMs, unused qcow2/ISO downloads, exited bare-metal containers, and stale R580/535 build backups were removed from `.24` (`148G -> 100G` used) without touching router/hardware/coreboot projects.
+- **DKMS & Reproducibility (`Ubuntu KVM` + `Proxmox VE 8/9`)**: Automated via [`install_vgpu_host_dkms.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/install_vgpu_host_dkms.sh), [`install_fastapi_dls.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/install_fastapi_dls.sh), [`setup_proxmox_vgpu_vms.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/setup_proxmox_vgpu_vms.sh), [`provision_alma_guest.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/provision_alma_guest.sh), [`provision_win11_guest.ps1`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/provision_win11_guest.ps1), and `scripts/templates/win11-autounattend.xml`.
+- **Clean-Room Open Host Daemon Replacements (`rea@6.10.1`)**:
+  - `open-nvidia-vgpud` (Rust in `nova-vgpu/src/rm_ioctl.rs`),
+  - `libopen-vgxcfg.so` (C in `open-vgxcfg/`, `0` byte diffs against NVIDIA `libnvidia-vgxcfg.so.535.309.01`),
+  - `open-nvidia-xid-logd` (C in `open-xid-logd/`, mock-NVML verified),
+  while retaining `nvidia.ko`, `nvidia-vgpu-mgr`, `libnvidia-vgpu.so.535.309.01`, and `nvidia-smi` for production data-plane stability.
 - **Clean-Room Reverse-Engineering:** All analyses were conducted strictly via observation of binary layouts, publicly distributed Linux headers, and physical register reads on retail hardware.
 - **NVIDIA Proprietary Firmware:** NVIDIA microcode, firmware binaries, and installer payloads are proprietary intellectual property of NVIDIA Corporation. They are not redistributed in public repositories.
 - **AI/LLM Provenance:** An AI / Large Language Model (Antigravity by Google DeepMind) was used to assist in the analysis, synthesis, documentation, and implementation of this codebase.
