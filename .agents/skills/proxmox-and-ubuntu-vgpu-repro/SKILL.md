@@ -62,13 +62,13 @@ ls /sys/bus/pci/devices/0000:01:00.0/mdev_supported_types/
 - **Ubuntu KVM native launch**: `sudo bash scripts/start_vgpu_vms.sh`
 
 ## 4. Multi-Distro Linux Guest Provisioning & Unattended Windows Install
-- **Linux Guests — RHEL, AlmaLinux, Rocky, Oracle, CentOS, Ubuntu LTS (20.04–26.04), Debian (11–13)** (`535.309.01` kernel + `620.70.06` Wayland/GBM libs into `/usr/lib64` or `/usr/lib/x86_64-linux-gnu`, `GSK_RENDERER=ngl`, headless Wayland `--no-x11 --headless`, GRD PTX patch, FastAPI-DLS token, `libopen-nvidia-encode.so`, optional Selkies 10-bit 4:4:4):
+- **Linux Guests — RHEL, AlmaLinux, Rocky, Oracle, CentOS, Ubuntu LTS (20.04–26.04), Debian (11–13)** (`535.309.01` kernel + `620.70.06` Wayland/GBM libs into `/usr/lib64` or `/usr/lib/x86_64-linux-gnu`, `GSK_RENDERER=ngl`, headless Wayland `--no-x11 --headless`, GRD PTX patch, FastAPI-DLS token, `libopen-nvidia-encode.so`, optional clean-room `open-gridd` `--with-open-gridd` and Selkies 10-bit 4:4:4 `--with-selkies`):
   ```bash
   sudo bash scripts/provision_linux_vgpu_guest.sh \
     --dls-url https://<HOST_IP> \
     --grid-535-run /path/to/NVIDIA-Linux-x86_64-535.309.01-grid.run \
     --grid-620-run /path/to/NVIDIA-Linux-x86_64-620.70.06-grid.run \
-    --rdp-user zero --rdp-pass '<PASS>' --with-selkies
+    --rdp-user zero --rdp-pass '<PASS>' --with-open-gridd --with-selkies
   ```
 - **Windows 11 24H2**: Use `scripts/templates/win11-autounattend.xml` (replace `__ADMIN_PASSWORD__`) for zero-prompt install, then run:
   ```powershell

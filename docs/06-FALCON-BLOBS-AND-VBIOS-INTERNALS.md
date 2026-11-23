@@ -1,6 +1,6 @@
 # 06 — Isolated Falcon Blobs, Hardware VBIOS & `NV_PROM` InfoROM Internals
 
-All NVIDIA proprietary / signed firmware images extracted from `580.178.04` and live Tesla P4 hardware are quarantined inside [`firmware-blobs/`](../firmware-blobs/README.md), completely separated from open-source code in [`nova-pascal/`](../nova-pascal/), [`tools/`](../tools/), [`kmods/`](../kmods/), and [`open-r580-driver/`](../open-r580-driver/).
+All NVIDIA proprietary / signed firmware images extracted from `580.178.04` and live Tesla P4 hardware are quarantined inside [`firmware-blobs/`](../firmware-blobs/README.md), completely separated from open-source code in [`tools/`](../tools/), [`kmods/`](../kmods/), [`dkms-compat/`](../dkms-compat/), and [`open-r580-driver/`](../open-r580-driver/).
 
 ## 1. Exact Per-Engine Signed Blob Map (`HAL_IMPL = 0x1f`, GP104)
 
@@ -19,7 +19,7 @@ Executing every decompiled R580.178.04 Physical RM HAL initializer against `HAL_
 
 ## 2. Binary Container Structures Decoded Clean-Room
 
-All header formats documented below are parsed deterministically without NVIDIA proprietary headers in [`nv_fw_descriptor_parser.py`](../tools/nv_fw_descriptor_parser.py) and [`nova-pascal/src/firmware.rs`](../nova-pascal/src/firmware.rs):
+All header formats documented below are parsed deterministically without NVIDIA proprietary headers in [`nv_fw_descriptor_parser.py`](../tools/nv_fw_descriptor_parser.py) and the companion `open-vgpu-tesla-p4` GP104 HAL (`open-host-rm/open_host_rm_gp104.c`):
 
 ### 2.1 `192`-Byte `LSF_UCODE_DESC` Signature XOR Footer
 Every `192`-byte LS signature entry (`PMU`, `FECS`, `GPCCS`, `NVENC`, `SEC2`) ends with `16` zero bytes (`[0xa0..0xb0]`) followed by `16` metadata bytes (`[0xb0..0xc0]`) XOR-masked with fixed little-endian words `(0xe931c2b6, 0xd777b203, 0x69a0320e, 0x62804e8f)`. Unmasking word `0` (`^ 0xe931c2b6`) recovers the exact `LsFalconId` (`0 = PMU`, `2 = FECS`, `3 = GPCCS`, `4 = NVENC`, `7 = SEC2`). This independently confirmed why `.rodata+0x29f80` (`fid = 4`) is **NVENC**, whereas `.rodata+0x2dac0` (`fid = 0`) is **PMU**.

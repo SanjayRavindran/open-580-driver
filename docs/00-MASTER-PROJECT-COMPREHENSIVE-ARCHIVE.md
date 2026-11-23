@@ -33,7 +33,7 @@ The target device under investigation is the **NVIDIA Tesla P4**, a low-profile,
 *Can NVIDIA's Falcon cryptographic signature verification be bypassed in software to enable full open-source operation without proprietary signed blobs?*
 
 ### 2.2 Live Silicon Proof
-Using a custom standalone Linux kernel driver ([`kmods/p4_cleanroom_diag/p4_cleanroom_diag.c`](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/kmods/p4_cleanroom_diag/p4_cleanroom_diag.c)), direct physical BAR0 MMIO reads were executed against the live silicon:
+Using a custom standalone Linux kernel driver ([`kmods/p4_cleanroom_diag/p4_cleanroom_diag.c`](../kmods/p4_cleanroom_diag/p4_cleanroom_diag.c)), direct physical BAR0 MMIO reads were executed against the live silicon:
 
 1. **Hardware Production Secure Boot Fuse:**
    ```c
@@ -204,13 +204,13 @@ $ nvidia-smi
 ```
 
 #### 2. Native C Smoke Tests
-- **CUDA & NVENC ([`p4_cuda_nvenc_smoke.c`](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/open-r580-driver/p4_cuda_nvenc_smoke.c)):**
+- **CUDA & NVENC ([`p4_cuda_nvenc_smoke.c`](../open-r580-driver/p4_cuda_nvenc_smoke.c)):**
   ```
   CUDA[0]: Tesla P4 (8109 MiB)
   VRAM DMA check: 5a 5a 5a 5a (Verified write/read cycle across PCIe)
   NVENC API v13.0: session active, codec GUID count=2 (H.264 & HEVC)
   ```
-- **NVDEC / CUVID ([`p4_nvdec_smoke.c`](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/open-r580-driver/p4_nvdec_smoke.c)):**
+- **NVDEC / CUVID ([`p4_nvdec_smoke.c`](../open-r580-driver/p4_nvdec_smoke.c)):**
   ```
   NVDEC (CUVID) hardware decoder capabilities on Tesla P4:
     H.264 8-bit    rc=0 supported=1 nvdecs=1 min=48x16 max=4096x4096 max_mb=65536 out_mask=0x0001
@@ -276,21 +276,26 @@ $ docker run --rm --gpus all --runtime nvidia ubuntu:24.04 nvidia-smi
 ## 7. Master Repository Inventory & File Map
 
 ```
-p4/
+open-580-driver/
 ├── LICENSE                                    # GNU General Public License v2.0
 ├── DISCLAIMER.md                              # Liability disclaimer & AI/LLM provenance disclosure
 ├── README.md                                  # Repository overview and quickstart guide
-├── docker-compose.yml                         # (Symlink / copy) Selkies + Jellyfin Compose stack
+├── .github/workflows/ci.yml                   # Unit test, bash syntax & binary-tracking CI gate
 │
 ├── docs/                                      # Complete Technical Documentation Suite
 │   ├── 00-MASTER-PROJECT-COMPREHENSIVE-ARCHIVE.md  # THIS FILE: Definitive reference & knowledge base
 │   ├── 01-HARDWARE-AND-OS-INVENTORY.md        # Silicon identity, UEFI Coreboot, PCI buses, Linux 7.0 env
 │   ├── 02-BINARY-AND-FIRMWARE-ANALYSIS.md     # ELF64 BindataStorage, decompressors, R580 offsets
 │   ├── 03-SILICON-BOUNDARY-AND-CLEANROOM-SPLIT.md # MMIO proofs, WPR1, fuses, Falcon bypass disproof
+│   ├── 04-LINUX-KERNEL-AND-IOCTL-SURFACE.md   # Linux DRM, RM ioctl ABI, UVM & fence contracts
 │   ├── 05-KERNEL-LONGEVITY-AND-REMOTE-DESKTOP.md   # Linux 7.x roadmap, Wayland, WDDM & Selkies/PixelFlux
 │   ├── 06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md # ACR, PMU, SEC2, NVENC, GR netlists, VBIOS BIT, InfoROM
-│   └── 07-OPEN-R580-HYBRID-AND-CUDA-NVENC.md  # DKMS architecture, userspace install, 10-bit 4:4:4 containers
+│   ├── 07-OPEN-R580-HYBRID-AND-CUDA-NVENC.md  # DKMS architecture, userspace install, 10-bit 4:4:4 containers
+│   ├── 08-OPEN-VS-CLOSED-ARCHITECTURE-DIAGRAMS.md  # Mermaid architecture diagrams (Host, Alma, Win11, sequence)
+│   ├── 09-REMAINING-PROPRIETARY-BLOBS.md      # Remaining blobs vs open components & silicon boundaries
+│   └── 10-INSTALLATION-GUIDE-HOST-AND-GUEST.md     # Bare-metal R580 & 50/50 vGPU installation guide
 │
+├── dkms-compat/                               # Linux 7.0+ DKMS / conftest compatibility shims
 ├── open-r580-driver/                          # Open-Shim R580 Hybrid Driver Toolkit
 │   ├── README.md                              # DKMS usage, userspace & container details
 │   ├── extract_r580_binaries.sh               # Automated downloader & SHA-256 validator for R580
@@ -304,6 +309,9 @@ p4/
 │   ├── p4_cuda_nvenc_smoke.c                  # Native C CUDA 13.0 DMA & NVENC session verifier
 │   └── p4_nvdec_smoke.c                       # Native C CUVID NVDEC hardware decode capability verifier
 │
+├── scripts/
+│   └── install_open_580.sh                    # Unified bare-metal & PCIe-passthrough Linux installer (--dry-run/--uninstall)
+│
 ├── kmods/                                     # Linux Kernel Diagnostic Drivers
 │   └── p4_cleanroom_diag/
 │       ├── Kbuild                             # Out-of-tree Kbuild script
@@ -314,7 +322,7 @@ p4/
 │   ├── nv_bindata_analyzer.py                 # ELF64 .rodata BindataStorage analyzer & blob extractor
 │   └── nv_fw_descriptor_parser.py             # Falcon descriptor, VBIOS BIT, and InfoROM JFFS parser
 │
-├── tests/                                     # Automated Test Suite (7 unit tests)
+├── tests/                                     # Automated Test Suite (9 unit tests)
 │   ├── test_nv_bindata_analyzer.py            # DEFLATE decompressor and bindata table unit tests
 │   ├── test_nv_fw_descriptor_parser.py        # LS signature XOR footer and InfoROM JFFS tests
 │   └── test_verify_ioctl_abi.py               # Synthetic header ioctl parser unit tests
@@ -328,7 +336,9 @@ p4/
 │   ├── wayland-vgpu-rdp-and-gtk4/SKILL.md     # Pure Wayland --headless RDP & GSK_RENDERER=ngl GTK4 fix
 │   ├── selkies-pixelflux-10bit-444-vgpu/SKILL.md # Docker + NCT CDI + Selkies/PixelFlux 10-bit 4:4:4
 │   ├── windows11-vgpu-wddm-and-rdp/SKILL.md   # Windows 11 WDDM 539.72, GPU-Z, NVCPL & RDP 0x200d fix
-│   └── open-r580-hybrid-dkms/SKILL.md         # Bare-metal R580 hybrid DKMS build & CUDA/NVENC smoke tests
+│   ├── open-r580-hybrid-dkms/SKILL.md         # Bare-metal R580 hybrid DKMS build & CUDA/NVENC smoke tests
+│   ├── open-vgpu-daemons-rea-dev/SKILL.md     # Open host & guest daemon build/test/REA workflow
+│   └── proxmox-and-ubuntu-vgpu-repro/SKILL.md # Reproducible Ubuntu KVM / Proxmox VE 8-9 vGPU deployment
 │
 ├── rdp/                                       # Ready-to-Use RDP Connection Profiles (1920x1080)
 │   ├── vm-win11-192.168.1.65.rdp              # Windows 11 24H2 WDDM 3.1 (GRID P4-4Q)
@@ -408,20 +418,19 @@ sudo bash open-r580-driver/open_r580_dkms_builder.sh --uninstall
 
 ## 9. Legal, Copyright & Attribution Notice
 
-- **Original Open-Source Software:** All scripts, Rust code, C smoke tests, diagnostic kernel modules, and markdown documentation authored in this repository are licensed under the **GNU General Public License v2.0** ([`LICENSE`](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/LICENSE)).
+- **Original Open-Source Software:** All scripts, C/Python code, diagnostic kernel modules, and markdown documentation authored in this repository are licensed under the **GNU General Public License v2.0** ([`LICENSE`](../LICENSE)).
 
 ---
 
-## Companion vGPU Repository (`open-vgpu-tesla-p4`) — Reproducible DKMS & REA 6.10.1 Open Host Daemons (2026-11-21)
+## Companion vGPU Repository (`open-vgpu-tesla-p4`) — Full 11-Component Clean-Room Stack & Multi-Distro Automation
 
 The active virtualization work on `192.168.1.24` (`vm-alma` + `vm-win11` 50/50 `GRID P4-4Q` split) lives in the companion repository ([`SanjayRavindran/open-vgpu-tesla-p4`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4)):
 - **Host Cleanup (`48 GiB` Reclaimed)**: Retired KVM VMs, unused qcow2/ISO downloads, exited bare-metal containers, and stale R580/535 build backups were removed from `.24` (`148G -> 100G` used) without touching router/hardware/coreboot projects.
-- **DKMS & Reproducibility (`Ubuntu KVM` + `Proxmox VE 8/9`)**: Automated via [`install_vgpu_host_dkms.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/install_vgpu_host_dkms.sh), [`install_fastapi_dls.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/install_fastapi_dls.sh), [`setup_proxmox_vgpu_vms.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/setup_proxmox_vgpu_vms.sh), [`provision_alma_guest.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/provision_alma_guest.sh), [`provision_win11_guest.ps1`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/provision_win11_guest.ps1), and `scripts/templates/win11-autounattend.xml`.
-- **Clean-Room Open Host Daemon Replacements (`rea@6.10.1`)**:
-  - `open-nvidia-vgpud` (Rust in `nova-vgpu/src/rm_ioctl.rs`),
-  - `libopen-vgxcfg.so` (C in `open-vgxcfg/`, `0` byte diffs against NVIDIA `libnvidia-vgxcfg.so.535.309.01`),
-  - `open-nvidia-xid-logd` (C in `open-xid-logd/`, mock-NVML verified),
-  while retaining `nvidia.ko`, `nvidia-vgpu-mgr`, `libnvidia-vgpu.so.535.309.01`, and `nvidia-smi` for production data-plane stability.
+- **DKMS & Multi-Distro Automation (`Ubuntu KVM`, `Proxmox VE 8/9`, Enterprise Linux / Debian / Ubuntu Guests)**: Automated via [`install_proxmox_vgpu_host.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/install_proxmox_vgpu_host.sh), [`install_vgpu_host_dkms.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/install_vgpu_host_dkms.sh), [`install_fastapi_dls.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/install_fastapi_dls.sh), [`setup_proxmox_vgpu_vms.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/setup_proxmox_vgpu_vms.sh), [`provision_linux_vgpu_guest.sh`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/provision_linux_vgpu_guest.sh), [`provision_win11_guest.ps1`](https://github.com/SanjayRavindran/open-vgpu-tesla-p4/blob/main/scripts/provision_win11_guest.ps1), and `scripts/templates/win11-autounattend.xml`.
+- **All 11 Clean-Room Open-Source Host & Guest Components (`rea@6.10.1`)**:
+  - Host: `open-nvidia-vgpud` (Rust), `libopen-vgxcfg.so` (C), `open-nvidia-xid-logd` (C), `open-nvidia-vgpu-mgr` (C, `60/60` `vmiop*` exports), `open-nvidia-smi` + `libopen-nvidia-ml.so` (C), `libopen-nvidia-vgpu.so` (C, `47/47` VRPCs + hybrid interposer), `libopen-host-rm-gp104.so` (C, WPR1 LSF + `22` vGPU profiles).
+  - Guest: `open-vgpu-guest` + `nova_vgpu_guest.ko` (zero-blob `535.309.01` `nvidia*.ko` overlay), `libopen-nvidia-encode.so` (C, NVENC 12.1), and **`open-gridd`** (C11, clean-room `/usr/bin/nvidia-gridd` NLS/DLS licensing daemon verified live on `vm-alma` against FastAPI-DLS `https://192.168.1.24:443`).
+  - Silicon Category #1 signed Falcon blobs (`acr`, `pmu`, `sec2`, `nvenc`, `nvdec`, `gr`, VBIOS `vbios_falcon_app_*`) remain permanently immutable due to hardware `PrivSec=1`; proprietary host `nvidia.ko` / `libnvidia-vgpu.so` and guest CUDA/GL/WDDM blobs remain optional stability/workload backends (see [`09-REMAINING-PROPRIETARY-BLOBS.md`](09-REMAINING-PROPRIETARY-BLOBS.md)).
 - **Clean-Room Reverse-Engineering:** All analyses were conducted strictly via observation of binary layouts, publicly distributed Linux headers, and physical register reads on retail hardware.
 - **NVIDIA Proprietary Firmware:** NVIDIA microcode, firmware binaries, and installer payloads are proprietary intellectual property of NVIDIA Corporation. They are not redistributed in public repositories.
 - **AI/LLM Provenance:** An AI / Large Language Model (Antigravity by Google DeepMind) was used to assist in the analysis, synthesis, documentation, and implementation of this codebase.

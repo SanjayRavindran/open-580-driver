@@ -23,6 +23,7 @@ description: >-
   8. `libopen-nvidia-encode.so` (`open-nvenc/open_nvenc.{h,c}`, `test_nvenc_unit.c`) -> Rank 1 clean-room `libnvidia-encode.so.1` replacement & trace interposer exporting all `10/10` ELF dynamic symbols (`NvEncodeAPICreateInstance`, `NvEncodeAPIGetMaxSupportedVersion` = `0xc1`, `NvTool*` with all `45` API names at `0x33c120`) and all `43` `NV_ENCODE_API_FUNCTION_LIST` slots (`+0x08..+0x158`) for Pascal GP104 H.264/HEVC 8-bit & 10-bit 4:2:0 / 4:4:4 (`YUV444_10BIT`).
   9. `libopen-host-rm-gp104.so` (`open-host-rm/open_host_rm_gp104.{h,c}`, `test_open_host_rm_unit.c`) -> Rank 3B Tier 2B host GP104 physical RM HAL slice building Category #1 immutable signed Falcon WPR1/ACR LSF descriptors (`8/8` Falcons matching `BLOB_MANIFEST.json`), `NV_PMC_ENABLE`/BAR1/BAR2 physical bringup, and `22`-type Tesla P4 vGPU / 50-50 `GRID P4-4Q` partitioning.
   10. `nvidia-vgpu-vfio.ko` -> MIT-licensed open KVM/VFIO mdev kernel module packaged via DKMS (`nvidia-vgpu-kvm/535.309.01`).
+  11. `open-gridd` (`open-gridd/{Makefile,CMakeLists.txt,include/gridd/*.h,src/*.c,tests/*}`) -> clean-room C11 Linux NLS/DLS licensing daemon (`/usr/bin/nvidia-gridd`, OpenSSL 3.x, PKCE auth, AES-256-GCM trusted store, RM `0x20808161`/`0x20800187` status) verified live on `vm-alma` against FastAPI-DLS (`https://192.168.1.24:443`).
 - **Retained Stable Components**: `nvidia.ko` (`nv-kernel.o_binary`) and `libnvidia-vgpu.so.535.309.01` (used behind `libopen-nvidia-vgpu.so` in hybrid mode for live 2-VM VRPC/DRM parity).
 
 ## 1. Running `rea@6.10.1` Static Analysis & Decompilation (`192.168.1.15`)
@@ -68,6 +69,9 @@ make -C open-nvenc clean all test diff-test
 # C Rank 3B open-host-rm GP104 physical RM HAL slice unit test
 make -C open-host-rm clean all test
 
+# C11 open-gridd unit, live mock-NLS/IMDSv2 E2E, and static clean-room audit tests
+make -C open-gridd clean all test clean
+
 # Linux 7.0 kbuild check for clean-room guest VRPC kernel module
 make -C kmods/nova_vgpu_guest KVER=7.0.0-43-generic clean all
 
@@ -76,5 +80,5 @@ bash open-vgpu-guest/scripts/build_open_535_guest_kmod.sh --workdir /tmp/open-53
 rm -rf /tmp/open-535-guest-build
 
 # Clean build binaries before git commit (CI rejects tracked .so/ELF/.ko files)
-make -C open-vgxcfg clean && make -C open-xid-logd clean && make -C open-vgpu-mgr clean && make -C open-nvml-smi clean && make -C open-vgpu-plugin clean && make -C open-vgpu-guest clean && make -C open-nvenc clean && make -C open-host-rm clean && make -C kmods/nova_vgpu_guest KVER=7.0.0-43-generic clean
+make -C open-vgxcfg clean && make -C open-xid-logd clean && make -C open-vgpu-mgr clean && make -C open-nvml-smi clean && make -C open-vgpu-plugin clean && make -C open-vgpu-guest clean && make -C open-nvenc clean && make -C open-host-rm clean && make -C open-gridd clean && make -C kmods/nova_vgpu_guest KVER=7.0.0-43-generic clean
 ```

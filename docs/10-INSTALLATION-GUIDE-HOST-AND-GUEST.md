@@ -1,6 +1,6 @@
 # Complete Host & Guest Installation Guide (`open-580-driver` & `open-vgpu-tesla-p4`)
 
-This guide provides step-by-step instructions to install either the **Bare-Metal / PCIe-Passthrough `open-580-driver` (`580.178.04`)** stack or the **50/50 Multi-VM `open-vgpu-tesla-p4` (`535.309.01-vgpu-kvm` + 6 Clean-Room Open-Source Host Binaries)** stack across **Host** and **Guest** machines.
+This guide provides step-by-step instructions to install either the **Bare-Metal / PCIe-Passthrough `open-580-driver` (`580.178.04`)** stack or the **50/50 Multi-VM `open-vgpu-tesla-p4` (`535.309.01-vgpu-kvm` + 11 Clean-Room Open-Source Host & Guest Components)** stack across **Host** and **Guest** machines.
 
 ---
 
@@ -40,7 +40,7 @@ sudo bash scripts/install_open_580.sh --uninstall
 
 ## 2. Track B — `open-vgpu-tesla-p4` (`535.309.01-vgpu-kvm` 50/50 Multi-VM Host & Guests)
 
-Use this track to partition a single Tesla P4 into **two concurrent `GRID P4-4Q` (`nvidia-65`, `4096 MiB` VRAM each) vGPUs** on **Ubuntu 24.04/26.04 KVM** or **Proxmox VE 8/9**, running **all 6 clean-room open-source host userspace binaries**:
+Use this track to partition a single Tesla P4 into **two concurrent `GRID P4-4Q` (`nvidia-65`, `4096 MiB` VRAM each) vGPUs** on **Ubuntu 24.04/26.04 KVM** or **Proxmox VE 8/9**, running **all 11 clean-room open-source host & guest components**:
 1. **`open-nvidia-vgpud`** (`Rust`, `nova-vgpu/`) — RM `NVA081` profile registrar
 2. **`libopen-vgxcfg.so`** (`C`, `open-vgxcfg/`) — XML DOM configuration library (`9/9` exports)
 3. **`open-nvidia-xid-logd`** (`C`, `open-xid-logd/`) — NVML XID event & Base64 debugdump daemon
@@ -94,7 +94,7 @@ systemctl status nvidia-vgpud nvidia-vgpu-mgr nvidia-xid-logd
 ```
 
 ### 2B. Multi-Distro Linux vGPU Guest Installation (`scripts/provision_linux_vgpu_guest.sh` — RHEL, AlmaLinux, Rocky, Oracle, CentOS, Ubuntu LTS, Debian)
-Auto-detects `/etc/os-release` across **RHEL 8/9/10**, **AlmaLinux 8/9/10**, **Rocky / Oracle / CentOS / Fedora**, **Ubuntu LTS (20.04, 22.04, 24.04, 26.04)**, and **Debian (11, 12, 13)**; installs `535.309.01` GRID kernel modules, overlays `620.70.06` Wayland/GBM userspace libraries (`libnvidia-egl-gbm`, `libnvidia-egl-wayland`, `libnvidia-egl-wayland2`, `nvidia-drm_gbm.so`) into `/usr/lib64` or `/usr/lib/x86_64-linux-gnu`, configures pure Wayland headless GNOME (`--no-x11 --headless`) + `GSK_RENDERER=ngl` + GNOME Remote Desktop CUDA PTX `8.0` patch (`:3389`), fetches the FastAPI-DLS client token, builds `libopen-nvidia-encode.so`, and optionally installs Docker + NVIDIA CDI + Selkies PixelFlux 10-bit 4:4:4:
+Auto-detects `/etc/os-release` across **RHEL 8/9/10**, **AlmaLinux 8/9/10**, **Rocky / Oracle / CentOS / Fedora**, **Ubuntu LTS (20.04, 22.04, 24.04, 26.04)**, and **Debian (11, 12, 13)**; installs `535.309.01` GRID kernel modules, overlays `620.70.06` Wayland/GBM userspace libraries (`libnvidia-egl-gbm`, `libnvidia-egl-wayland`, `libnvidia-egl-wayland2`, `nvidia-drm_gbm.so`) into `/usr/lib64` or `/usr/lib/x86_64-linux-gnu`, configures pure Wayland headless GNOME (`--no-x11 --headless`) + `GSK_RENDERER=ngl` + GNOME Remote Desktop CUDA PTX `8.0` patch (`:3389`), fetches the FastAPI-DLS client token, builds `libopen-nvidia-encode.so`, and optionally builds/installs clean-room `open-gridd` (`--with-open-gridd`) + Docker/NVIDIA CDI/Selkies PixelFlux 10-bit 4:4:4 (`--with-selkies`):
 ```bash
 sudo bash scripts/provision_linux_vgpu_guest.sh \
   --dls-url https://192.168.1.24 \
