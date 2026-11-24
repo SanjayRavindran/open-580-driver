@@ -59,7 +59,7 @@ Auditing every `.zst` file under `/lib/firmware/nvidia/gp104/` (with symlinks re
 
 ### Key Observation
 
-Comparing `/lib/firmware/nvidia/gp104/` against our R580.178.04 `.rodata` extraction ([`02-BINARY-AND-FIRMWARE-ANALYSIS.md`](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/docs/02-BINARY-AND-FIRMWARE-ANALYSIS.md) and [`06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md`](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/docs/06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md)):
+Comparing `/lib/firmware/nvidia/gp104/` against our R580.178.04 `.rodata` extraction ([`02-BINARY-AND-FIRMWARE-ANALYSIS.md`](./02-BINARY-AND-FIRMWARE-ANALYSIS.md) and [`06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md`](./06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md)):
 1. **`pmu/` firmware is completely absent** in `linux-firmware` for `gp104`, even though R580.178.04 ships a full `300,288`-byte signed `GP104` PMU RTOS image (`0x26108`), `940`-byte descriptor, `768`-byte bootloader (`0x25c80`), and `192`-byte LS signature (`0x2dac0`, `fid = 0`, SHA-256 `5f61eef8f1749300...`) — alongside separate `NVENC` blobs (`0x29ae8`, `0x29b00`, LS sig `0x29f80`, `fid = 4`, SHA-256 `2ebe0dfe3cf9ea29...`) that `nouveau` leaves unimplemented.
 2. Even for shared `acr/` (`17,152`-byte `ucode_load.bin`) and `sec2/` (`109,568`-byte `image-1.bin` vs `221,440`-byte `id_0x23.bin` + `65,792`-byte HS blob), R580.178.04 ships significantly newer signed Falcon revisions than the legacy `gp102` symlinks in Ubuntu's `linux-firmware`.
 3. Hardware `NV_PROM` (`prom_raw.bin`) also exposes the live card's VBIOS (`G414.0200.00.03`, `3` embedded BIT `'p'` Falcon apps) and trailing `JFFS` InfoROM (`OBD` `Tesla P4`, `ECC`, `PBL`, `BBX`), archived cleanly under [`firmware-blobs/gp104/vbios/`](../firmware-blobs/gp104/vbios/).

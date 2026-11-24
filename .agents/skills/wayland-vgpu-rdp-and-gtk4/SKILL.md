@@ -38,7 +38,7 @@ description: >-
      grdctl --headless rdp set-port 3389
      grdctl --headless rdp set-tls-cert ~/.local/share/gnome-remote-desktop/tls/tls.crt
      grdctl --headless rdp set-tls-key ~/.local/share/gnome-remote-desktop/tls/tls.key
-     grdctl --headless rdp set-credentials zero <RDP_PASSWORD>
+     grdctl --headless rdp set-credentials zero '<YOUR_RDP_PASSWORD>'
      grdctl --headless rdp enable
      systemctl --user enable --now gnome-remote-desktop-headless.service
      ```
@@ -58,8 +58,8 @@ description: >-
      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_SESSION_TYPE XDG_CURRENT_DESKTOP GSK_RENDERER
      ```
 
-### 3. Activate vGPU License Against `https://192.168.1.24:443` (`open-gridd` -> `/usr/bin/nvidia-gridd`)
-`vm-alma` runs the clean-room C11 `open-gridd` licensing daemon (`/usr/bin/nvidia-gridd`, managed by `nvidia-gridd.service`):
+### 3. Activate vGPU License Against `https://192.168.1.24:443`
+`nvidia-gridd` can run our clean-room C11 `open-gridd` daemon (`--with-open-gridd`, see `open-gridd-nls-licensing` skill) instead of the proprietary vendor binary:
 ```bash
 sudo mkdir -p /etc/nvidia/ClientConfigToken
 sudo rm -f /etc/nvidia/ClientConfigToken/*.tok

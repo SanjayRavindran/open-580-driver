@@ -21,7 +21,7 @@ A common misconception is that host x86 obfuscation hides secret driver paths in
 
 ## 2. Live Silicon Proof: Why Falcon Signature Enforcement Cannot Be Bypassed in Software
 
-Sampling physical BAR0 registers via [`p4_cleanroom_diag.c`](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/kmods/p4_cleanroom_diag/p4_cleanroom_diag.c) across three driver states on the live Tesla P4 (`0000:01:00.0`) proves directly on silicon why unsigned software cannot bypass Falcon:
+Sampling physical BAR0 registers via [`p4_cleanroom_diag.c`](../kmods/p4_cleanroom_diag/p4_cleanroom_diag.c) across three driver states on the live Tesla P4 (`0000:01:00.0`) proves directly on silicon why unsigned software cannot bypass Falcon:
 
 | Register / State | Unbound (`no_driver`) | `nouveau 1.4.2` | Live R580 (`580.178.04`) | Hardware Enforcement Verdict |
 | :--- | :--- | :--- | :--- | :--- |

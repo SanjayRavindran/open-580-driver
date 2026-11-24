@@ -13,7 +13,7 @@ The driver package `NVIDIA-Linux-x86_64-580.178.04.run` was extracted without mo
   - `p4_gr_hal.o`: GR `FECS` (`_nv005875rm`), `GPCCS` (`_nv005879rm`), and packed GR Netlist (`_nv005889rm`) HALs (`ev_f81035f1fba65309ad112c8efd10afc44aacfab94858f43942a449194a949fa0`, `638` functions written, `0` failed)
 - `rea inspect-native-exports` on `libnvidia-encode.so.580.178.04` (`ev_59611b79e3f862d563d76410e43ccdb87848ab385cbf9fda9ab942dbe56f1cbf`), confirming `NvEncodeAPICreateInstance` and `NvEncodeAPIGetMaxSupportedVersion` entrypoints (`ptrs[30]` / `+0xf0` = `nvEncOpenEncodeSessionEx` for CUDA contexts, `ptrs[2]` / `+0x10` = `nvEncGetEncodeGUIDCount`).
 
-*(Tooling note recorded accurately: `rea` `inspect_binary_layout` returned `provider_unavailable` because `REA_PWNTOOLS_PYTHON` was unset in that session, and `inspect_kernel_module` rejected `nvidia.ko` at `136,222,376` bytes against the `67,108,864`-byte file budget; `.rodata` structural inspection was completed via ELF64 `.rela.rodata` / `.symtab` scanning in [nv_bindata_analyzer.py](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/tools/nv_bindata_analyzer.py).)*
+*(Tooling note recorded accurately: `rea` `inspect_binary_layout` returned `provider_unavailable` because `REA_PWNTOOLS_PYTHON` was unset in that session, and `inspect_kernel_module` rejected `nvidia.ko` at `136,222,376` bytes against the `67,108,864`-byte file budget; `.rodata` structural inspection was completed via ELF64 `.rela.rodata` / `.symtab` scanning in [nv_bindata_analyzer.py](../tools/nv_bindata_analyzer.py).)*
 
 ## 2. Why `nv-kernel.o_binary` Appears High-Entropy (`7.4854` bits/byte)
 
@@ -43,7 +43,7 @@ Decompiling `_nv034616rm` (`0xa4d0`), `rm_is_supported_device` (`0xd67470`), `_n
 
 ## 4. `BindataStorage` Archive & Entry Binary Layout
 
-Reverse-engineering `_nv005947rm`, `_nv005956rm`, `_nv006010rm`, and `_nv006035rm` decoded the exact `.rodata` firmware container structs (implemented cleanly in [nv_bindata_analyzer.py](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/tools/nv_bindata_analyzer.py)):
+Reverse-engineering `_nv005947rm`, `_nv005956rm`, `_nv006010rm`, and `_nv006035rm` decoded the exact `.rodata` firmware container structs (implemented cleanly in [nv_bindata_analyzer.py](../tools/nv_bindata_analyzer.py)):
 
 ```text
 BindataStorage (16-byte header + N x 16-byte records in .rodata):
@@ -97,5 +97,5 @@ A critical finding in `p4_hal_chip2.o` explains why Turing+ open drivers miss GP
 | `gp104_gpccs_ls_sig` | `0x2c800` | single | 192 | `452d32671ff1b40e68e1600db23875b11335c55fda7808e4d77f8f70eda5d356` | GPCCS LS sig (`fid=3`) + `512`B BL (`bootvec=0x3400`) |
 | `gp104_gr_netlist` | `0x2ae98` | single | 90,552 | `0cfca0632f33f37d...` | Packed 32-section GR Netlist (`_nv032828rm`, `Jun 28 2019`) |
 
-Note on `_nv029066rm` `LsFalconId` footer semantics: executing every decompiled Physical HAL initializer against `HAL_IMPL = 0x1f` and unmasking `[0xb0..0xc0]` of the `192`-byte LSF wrappers with `0xe931c2b6` proved `.rodata+0x29f80` (`_nv018350rm`) carries `falcon_id = 4` (`NVENC`), whereas `.rodata+0x2dac0` (`_nv052124rm`) carries `falcon_id = 0` (`PMU`). See [`06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md`](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/docs/06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md) and [`BLOB_MANIFEST.json`](file:///c:/Users/Sanjay/Documents/AI%20Projects/p4/firmware-blobs/gp104/BLOB_MANIFEST.json) for all `42`+ extracted GP104 artifacts.
+Note on `_nv029066rm` `LsFalconId` footer semantics: executing every decompiled Physical HAL initializer against `HAL_IMPL = 0x1f` and unmasking `[0xb0..0xc0]` of the `192`-byte LSF wrappers with `0xe931c2b6` proved `.rodata+0x29f80` (`_nv018350rm`) carries `falcon_id = 4` (`NVENC`), whereas `.rodata+0x2dac0` (`_nv052124rm`) carries `falcon_id = 0` (`PMU`). See [`06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md`](./06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md) and [`BLOB_MANIFEST.json`](../firmware-blobs/gp104/BLOB_MANIFEST.json) for all `42`+ extracted GP104 artifacts.
 
