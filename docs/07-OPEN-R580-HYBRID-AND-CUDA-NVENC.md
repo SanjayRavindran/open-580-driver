@@ -41,7 +41,7 @@ On Linux `7.0.0-43-generic`, `nvidia-drm.ko` requires `drm_ttm_helper` pre-loade
 
 ## 4. NVIDIA Container Toolkit + Selkies & LinuxServer.io PixelFlux (`10-bit` & `4:4:4` Color Depth)
 
-Both `open-580-driver` (bare-metal R580) and `open-vgpu-tesla-p4` (KVM vGPU `535.309.01` + R620 Wayland/GBM overlay) are configured for **NVIDIA Container Toolkit (`1.20.2`)** and **LinuxServer.io Selkies (`2.2.1`) + PixelFlux (`2.2.3`)** with **10-bit and 4:4:4 (`YUV444`) hardware acceleration**:
+Both `open-580-driver` (bare-metal R580 `580.178.04`) and `open-vgpu-tesla-p4` (R580 KVM vGPU `580.196.09` host / `580.196.07` X11-stripped pure Wayland Linux guest) are configured for **NVIDIA Container Toolkit (`mode = "cdi"`)** and **LinuxServer.io Selkies (`2.2.1`) + PixelFlux (`2.2.3`)** with **10-bit and 4:4:4 (`YUV444`) hardware acceleration**:
 
 ### Hardware Capabilities Reported by `pixelflux` on Tesla P4 / `GRID P4-4Q`
 ```text

@@ -3,7 +3,7 @@
 This repository contains the **Open-Shim R580 (`580.178.04`) DKMS / CUDA / NVENC / NVDEC / Wayland driver stack**, **silicon Falcon bypass disproof**, **isolated GP104 firmware extraction pipeline**, and **NVIDIA Container Toolkit (`nvidia-ctk`) + Selkies / LinuxServer.io PixelFlux (`10-bit` & `4:4:4` `YUV444`) hardware acceleration integration** for the **NVIDIA Tesla P4 (`GP104GL`, PCI `10de:1bb3`)** on **Ubuntu 26.04.1 LTS (`Linux 7.0.0-43-generic`, UEFI Coreboot host `192.168.1.24`)**.
 
 > [!NOTE]
-> For KVM vGPU virtualization (Pure Wayland Linux desktop + Windows 11 WDDM `539.72` with a 50/50 `GRID P4-4Q` split), see the companion [**`open-vgpu-tesla-p4`**](https://github.com/SanjayRavindran/open-vgpu-tesla-p4) repository. The experimental pure `nova-core` / Mesa / Vulkan track has been retired and removed to focus strictly on `open-580-driver` and `open-vgpu-tesla-p4`.
+> For KVM vGPU virtualization (**R580 unified stack**: `580.196.09-vgpu-kvm` host + `580.196.07` X11-stripped pure Wayland Linux guest + `582.99` Windows 11 WDDM `3.1` guest with a 50/50 `GRID P4-4Q` split), see the companion [**`open-vgpu-tesla-p4`**](https://github.com/SanjayRavindran/open-vgpu-tesla-p4) repository. The experimental pure `nova-core` / Mesa / Vulkan track and legacy R535/R620 hybrid workarounds have been retired.
 
 ---
 

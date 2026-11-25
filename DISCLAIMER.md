@@ -20,7 +20,6 @@ Kernel-level software and out-of-tree DKMS packages carry inherent operational r
 An **AI / Large Language Model (LLM)** was used during the reverse-engineering synthesis and to generate the open-source codebase in this repository — including:
 
 - Python ELF `.rodata` / Falcon descriptor / VBIOS / PROM parsers and unit tests ([`tools/`](./tools/), [`tests/`](./tests/)),
-- Clean-room `no_std` Rust [`nova-pascal/`](./nova-pascal/) hardware definitions and bootstrap state machine,
 - GPLv2 clean-room telemetry kernel module ([`kmods/p4_cleanroom_diag/`](./kmods/p4_cleanroom_diag/)),
 - Track 1 extraction, DKMS staging, ABI verification, and C smoke-test tooling ([`open-r580-driver/`](./open-r580-driver/)),
 - GitHub Actions CI/CD pipelines and the technical documentation suite ([`docs/`](./docs/)).

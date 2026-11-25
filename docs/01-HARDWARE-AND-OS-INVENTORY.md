@@ -7,8 +7,8 @@
 | Host IP / Board / Firmware | `192.168.1.24` (`br0`), Gigabyte `H61M-S1 PLUS`, **UEFI Coreboot (`df45ea2c49b4-dirty`)** with Intel VT-d (`DMAR` / `x2apic` / 64-bit Above-4G BARs) |
 | CPU & Memory | Intel Xeon E3-1275 V2 @ 3.50 GHz (4 cores / 8 threads, `x86-64-v2`), 14 GiB DDR3 RAM |
 | Distribution | Ubuntu 26.04.1 LTS (Resolute Raccoon) |
-| Kernel Release | `7.0.0-43-generic` (`x86_64`) |
-| Active Driver Stacks | **`open-r580-driver` (`580.178.04`)** for bare-metal Linux/containers, and **`open-vgpu-tesla-p4` (`535.309.01-vgpu-kvm`)** for 50/50 `GRID P4-4Q` KVM vGPU virtualization |
+| Kernel Release | `7.0.0-43-generic` / `7.0.0-44-generic` (`x86_64`) |
+| Active Driver Stacks | **`open-r580-driver` (`580.178.04`)** for bare-metal Linux/containers, and **`open-vgpu-tesla-p4` (`580.196.09-vgpu-kvm` host / `580.196.07` Linux guest / `582.99` WDDM guest)** for 50/50 `GRID P4-4Q` KVM vGPU virtualization |
 | Integrated Display Adapter | `00:02.0` Intel `i915` (`card1`, `renderD128`, connectors `DP-1`, `HDMI-A-1`, `VGA-1`) |
 
 ## 2. NVIDIA Tesla P4 (`GP104GL`) PCI Topology
@@ -62,5 +62,5 @@ Auditing every `.zst` file under `/lib/firmware/nvidia/gp104/` (with symlinks re
 Comparing `/lib/firmware/nvidia/gp104/` against our R580.178.04 `.rodata` extraction ([`02-BINARY-AND-FIRMWARE-ANALYSIS.md`](./02-BINARY-AND-FIRMWARE-ANALYSIS.md) and [`06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md`](./06-FALCON-BLOBS-AND-VBIOS-INTERNALS.md)):
 1. **`pmu/` firmware is completely absent** in `linux-firmware` for `gp104`, even though R580.178.04 ships a full `300,288`-byte signed `GP104` PMU RTOS image (`0x26108`), `940`-byte descriptor, `768`-byte bootloader (`0x25c80`), and `192`-byte LS signature (`0x2dac0`, `fid = 0`, SHA-256 `5f61eef8f1749300...`) — alongside separate `NVENC` blobs (`0x29ae8`, `0x29b00`, LS sig `0x29f80`, `fid = 4`, SHA-256 `2ebe0dfe3cf9ea29...`) that `nouveau` leaves unimplemented.
 2. Even for shared `acr/` (`17,152`-byte `ucode_load.bin`) and `sec2/` (`109,568`-byte `image-1.bin` vs `221,440`-byte `id_0x23.bin` + `65,792`-byte HS blob), R580.178.04 ships significantly newer signed Falcon revisions than the legacy `gp102` symlinks in Ubuntu's `linux-firmware`.
-3. Hardware `NV_PROM` (`prom_raw.bin`) also exposes the live card's VBIOS (`G414.0200.00.03`, `3` embedded BIT `'p'` Falcon apps) and trailing `JFFS` InfoROM (`OBD` `Tesla P4`, `ECC`, `PBL`, `BBX`), archived cleanly under [`firmware-blobs/gp104/vbios/`](../firmware-blobs/gp104/vbios/).
+3. Hardware `NV_PROM` (`prom_raw.bin`) also exposes the live card's VBIOS (`G414.0200.00.03`, `3` embedded BIT `'p'` Falcon apps) and trailing `JFFS` InfoROM (`OBD` `Tesla P4`, `ECC`, `PBL`, `BBX`), cataloged under [`firmware-blobs/gp104/BLOB_MANIFEST.json`](../firmware-blobs/gp104/BLOB_MANIFEST.json).
 
